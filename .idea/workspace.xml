@@ -22,8 +22,7 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="74" />
-    <option name="y" value="8" />
+    <option name="y" value="1" />
     <option name="width" value="1375" />
     <option name="height" value="831" />
   </component>
@@ -79,7 +78,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="74" y="8" width="1375" height="831" extended-state="0" />
+    <frame x="0" y="1" width="1375" height="831" extended-state="0" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
