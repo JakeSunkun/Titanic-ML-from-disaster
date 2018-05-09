@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-# %matplotlib inline
 
 from collections import Counter
 
@@ -23,6 +22,7 @@ sns.set(style='white', context='notebook', palette='deep')
 train = pd.read_csv("D:/workstation/kaggle_list/Titanic-ML-from-disaster/train.csv")
 test = pd.read_csv("D:/workstation/kaggle_list/Titanic-ML-from-disaster/test.csv")
 # IDtest = test["PassengerID"]
+
 
 # ————————————————2.2 离群样本检测————————————————
 # outlier detection：异常值检测
@@ -45,7 +45,7 @@ def detect_outliers(df, n, features):
         # outlier_step：用于确定内限范围
         outlier_step = 1.5 * IQR
         # 确定异常值的index
-        outlier_list_col = df[(df[col] < Q1 - outlier_step)|(df[col] > Q3 + outlier_step)].index
+        outlier_list_col = df[(df[col] < Q1 - outlier_step) | (df[col] > Q3 + outlier_step)].index
         # 将outlier_list_col中的所有的index进行组合
         outlier_indices.extend(outlier_list_col)
     # 计算拓展后的异常值outlier_indices数目
@@ -56,8 +56,9 @@ def detect_outliers(df, n, features):
     multiple_outliers = list(k for k, v in outlier_indices.items() if v > n)
     return multiple_outliers
 
+
 # detect outliers from Age, SibSp , Parch and Fare
-Outliers_to_drop = detect_outliers(train, 2, ["Age","SibSp","Parch","Fare"])
+Outliers_to_drop = detect_outliers(train, 2, ["Age", "SibSp", "Parch", "Fare"])
 
 # ————————————————2.3 组合训练和测试数据集————————————————
 # 连接测试集和训练集获得绝对的数据版本
@@ -69,10 +70,48 @@ dataset = pd.concat(objs=[train, test], axis=0).reset_index(drop=True)
 dataset = dataset.fillna(np.nan)
 
 # 检测Null值,并计数
-dataset.isnull().sum()
+info_null_sum = dataset.isnull().sum()
 
 # ————————Info——————————
-train.info()
-train.isnull().sum()
-train.head()
-train.describe()
+# info_a = train.info()          # 显示train的概要信息
+info_b = train.isnull().sum()  # 统计train中的空缺值
+info_c = train.head()          # 显示前五行数据
+info_d = train.describe()      # 显示描述信息
+
+# ————————————————3 特征分析——————————————————
+# ————————————————3.1 数值分析————————————————
+# 数值之间的关联度
+plt.figure()
+g_all = sns.heatmap(train[["Survived", "SibSp", "Parch", "Age", "Fare"]].corr(),
+                        annot=True, fmt=".2f", cmap="coolwarm")
+g_all = g_all.set_title("Graph3.1 Correlation matrix between numerical values ")
+# g_heatmap.show()
+plt.show()
+
+# 探究SibSp特征和survived之间的关系
+# plt.figure()
+g_sibsp = sns.factorplot(x="SibSp", y="Survived", data=train, kind="bar", size=6, palette="muted")
+# g_factorplot.despine(letf=True)
+g_sibsp = g_sibsp.set_ylabels("survival probability")
+plt.show()
+
+# Parch和survived之间的关系
+g_parch = sns.factorplot(x="Parch", y="Survived", data=train, kind="bar", size=6, palette="muted")
+# g_parch.despine(letf=True)
+g_parch = g_parch.set_ylabels("survival probabitlity")
+plt.show()
+
+# Age和survived的关系
+g_age = sns.FacetGrid(train, col='Survived')
+g_age = g_age.map(sns.distplot, "Age")
+plt.show()
+
+# Age曲线分布
+g = sns.kdeplot(train["Age"][(train["Survived"] == 0) & (train["Age"].notnull())], color="Red", shade = True)
+g = sns.kdeplot(train["Age"][(train["Survived"] == 1) & (train["Age"].notnull())], ax =g, color="Blue", shade= True)
+g.set_xlabel("Age")
+g.set_ylabel("Frequency")
+g = g.legend(["Not Survived","Survived"])
+plt.show()
+
+
