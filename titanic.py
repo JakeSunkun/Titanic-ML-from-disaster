@@ -114,4 +114,27 @@ g.set_ylabel("Frequency")
 g = g.legend(["Not Survived","Survived"])
 plt.show()
 
+# Fare船费统计数据
+info_fare = dataset["Fare"].isnull().sum()
+# print(info_fare)
+# 以median进行填充
+# 报错：没有找到filena方法
+# dataset["Fare"] = dataset["Fare"].filena(dataset["Fare"].median())
+# for index, value in dataset["Fare"]:
+#     if value==0:
+#         dataset["Fare"][index]=0
+
+# print(type(dataset["Fare"]))
+
+g_fare = sns.distplot(train["Fare"], color="m", label="Skewness: %.2f"%(dataset["Fare"].skew()))
+g_fare = g_fare.legend(loc="best")
+plt.show()
+# 平滑处理
+train["Fare"] = train["Fare"].map(lambda i:np.log(i) if i > 0 else 0)
+g_fare_log = sns.distplot(train["Fare"], color="m", label="Skewness: %.2f"%(dataset["Fare"].skew()))
+g_fare_log = g_fare_log.legend(loc="best")
+plt.show()
+
+
+
 
