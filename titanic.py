@@ -135,6 +135,41 @@ g_fare_log = sns.distplot(train["Fare"], color="m", label="Skewness: %.2f"%(data
 g_fare_log = g_fare_log.legend(loc="best")
 plt.show()
 
+# ————————————————3.2 类别值分析————————————————
+# sex性别分析
+g_sex = sns.barplot(x="Sex", y="Survived", data=train)
+g_sex = g_sex.set_ylabel("Sruvival Probability")
+plt.show()
+
+info_sex = train[["Sex", "Survived"]].groupby('Sex').mean()
+# print(info_sex)
+
+# Pclass:乘客舱等级划分
+g_pclass = sns.factorplot(x="Pclass", y="Survived", data=train, kind="bar", size=6, palette="muted")
+g_pclass = g_pclass.set_ylabels("survival probability")
+plt.show()
+
+# 不同乘客舱中性别得生存比例
+g_pclass_sex = sns.factorplot(x="Pclass", y="Survived", hue="Sex", data=train,
+                   size=6, kind="bar", palette="muted")
+g_pclass_sex = g_pclass_sex.set_ylabels("survival probability")
+plt.show()
+
+# 登船港口数据分析
+# 填充空缺数据为登船人数最多的港口
+info_embarked = dataset["Embarked"].isnull().sum()
+dataset["Embarked"] = dataset["Embarked"].fillna("S")
+
+g_embarked = sns.factorplot(x="Embarked", y="Survived", data=train, size=6, kind="bar", palette="muted")
+g_embarked = g_embarked.set_ylabels("surveved probability")
+plt.show()
+# col:不同登船港口分别划分，每个条目里面是Pclass船舱等级的划分
+g_embarked_count = sns.factorplot("Pclass", col="Embarked", data=train, size=6, kind="count", palette="muted")
+g_embarked_count = g_embarked_count.set_ylabels("Count")
+plt.show()
+
+
+
 
 
 
