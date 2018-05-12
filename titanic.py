@@ -78,7 +78,7 @@ info_b = train.isnull().sum()  # 统计train中的空缺值
 info_c = train.head()          # 显示前五行数据
 info_d = train.describe()      # 显示描述信息
 
-# ————————————————3 特征分析——————————————————
+# ————————————————3 Feature Analysis:特征分析——————————————————
 # ————————————————3.1 数值分析————————————————
 # 数值之间的关联度
 plt.figure()
@@ -168,6 +168,44 @@ g_embarked_count = sns.factorplot("Pclass", col="Embarked", data=train, size=6, 
 g_embarked_count = g_embarked_count.set_ylabels("Count")
 plt.show()
 
+# ————————————————4 Filling missing Valuest:填补空缺值————————————————
+# Age：年龄和各个特征之间的数值分析
+g = sns.factorplot(y="Age", x="Sex", data=dataset, kind="box")
+plt.show()
+g = sns.factorplot(y="Age", x="Sex", hue="Pclass", data=dataset, kind="box")
+plt.show()
+g = sns.factorplot(y="Age", x="Parch", data=dataset, kind="box")
+plt.show()
+g = sns.factorplot(y="Age", x="SibSp", data=dataset, kind="box")
+plt.show()
+
+# 将性别转换为0或者1，male：0；female：1
+dataset["Sex"] = dataset["Sex"].map({"male":0, "female":1})
+g = sns.heatmap(dataset[["Age", "Sex", "SibSp", "Parch", "Pclass"]].corr(), cmap="BrBG", annot=True)
+plt.show()
+
+# 填充缺失的年龄信息
+# NaN age的行的列表
+index_NaN_age = list(dataset["Age"][dataset["Age"].isnull()].index)
+
+for i in index_NaN_age:
+    age_med = dataset["Age"].median()
+    age_pred = dataset["Age"][((dataset["SibSp"] == dataset.iloc[i]["SibSp"])
+                               &(dataset["Parch"] == dataset.iloc[i]["Parch"])
+                               &(dataset["Pclass"] == dataset.iloc[i]["Pclass"]))].median()
+    if not np.isnan(age_pred):
+        dataset["Age"].iloc[i] = age_pred
+    else:
+        dataset['Age'].iloc[i] = age_med
+
+# 重新绘Survived和Age的关系图，制箱式和琴式图
+g = sns.factorplot(x="Survived", y ="Age", data=train, kind="box")
+plt.show()
+g = sns.factorplot(x="Survived", y ="Age", data=train, kind="violin" )
+plt.show()
+
+# ————————————————5 Feature engineering: 特征工程————————————————
+# Name/Title
 
 
 
