@@ -60,6 +60,8 @@ def detect_outliers(df, n, features):
 # detect outliers from Age, SibSp , Parch and Fare
 Outliers_to_drop = detect_outliers(train, 2, ["Age", "SibSp", "Parch", "Fare"])
 
+train = train.drop(Outliers_to_drop, axis=0).reset_index(drop=True)
+
 # ————————————————2.3 组合训练和测试数据集————————————————
 # 连接测试集和训练集获得绝对的数据版本
 train_len = len(train)
@@ -205,9 +207,111 @@ g = sns.factorplot(x="Survived", y ="Age", data=train, kind="violin" )
 plt.show()
 
 # ————————————————5 Feature engineering: 特征工程————————————————
-# Name/Title
+# 5.1 Name/Title
+info_name = dataset["Name"].head()
+# print(info_name)
 
+# 从Name中获取Title
+dataset_title = [i.split(",")[1].split(".")[0].strip() for i in dataset["Name"]]
+dataset["Title"] = pd.Series(dataset_title)
+info_title = dataset["Title"].head()
+# print(info_title)
 
+g = sns.countplot(x="Title", data=dataset)
+g = plt.setp(g.get_xticklabels(), rotation=45)
+plt.show()
 
+# 统计改进
+dataset["Title"] = dataset["Title"].replace(['Lady', 'the Countess','Countess','Capt', 'Col','Don',
+                                             'Dr', 'Major', 'Rev', 'Sir', 'Jonkheer', 'Dona'], 'Rare')
+dataset["Title"] = dataset["Title"].map({"Master":0, "Miss":1, "Ms" : 1 , "Mme":1, "Mlle":1, "Mrs":1, "Mr":2, "Rare":3})
+dataset["Title"] = dataset["Title"].astype(int)
 
+g = sns.countplot(dataset["Title"])
+g = g.set_xticklabels(["Master","Miss/Ms/Mme/Mlle/Mrs","Mr","Rare"])
+plt.show()
+
+# Title和Survived之间的关系图
+g = sns.factorplot(x="Title", y="Survived", data=dataset, kind="bar")
+g = g.set_xticklabels(["Master","Miss/Ms/Mme/Mlle/Mrs","Mr","Rare"])
+g = g.set_ylabels("sruvival probability")
+plt.show()
+
+# 去掉无关紧要的Name
+dataset.drop(labels = ["Name"], axis = 1, inplace = True)
+
+# 5.2 Family Size
+# 新建family总数
+dataset["Fsize"] = dataset["SibSp"] + dataset["Parch"] + 1
+
+g = sns.factorplot(x="Fsize", y="Survived", data=dataset)
+g = g.set_ylabels("Survival Probability")
+plt.show()
+
+# 优化统计展示效果
+dataset['Single'] = dataset['Fsize'].map(lambda s: 1 if s ==1 else 0)
+dataset['SmallF'] = dataset['Fsize'].map(lambda s: 1 if s ==2 else 0)
+dataset['MedF'] = dataset['Fsize'].map(lambda s: 1 if 3<=s<=4 else 0)
+dataset['LargeF'] = dataset['Fsize'].map(lambda s: 1 if s>=5 else 0)
+
+g = sns.factorplot(x="Single", y="Survived", data=dataset, kind="bar")
+g = g.set_ylabels("Survived Probability")
+plt.show()
+g = sns.factorplot(x="SmallF", y="Survived", data=dataset, kind="bar")
+g = g.set_ylabels("Survived Probability")
+plt.show()
+g = sns.factorplot(x="MedF", y="Survived", data=dataset, kind="bar")
+g = g.set_ylabels("Survived Probability")
+plt.show()
+g = sns.factorplot(x="LargeF", y="Survived", data=dataset, kind="bar")
+g = g.set_ylabels("Survived Probability")
+plt.show()
+
+# print(dataset.head())
+# 原始数据中的添加准备好的相关数据
+dataset = pd.get_dummies(dataset, columns=["Title"])
+dataset = pd.get_dummies(dataset, columns=["Embarked"], prefix="Em")
+# print(dataset.head())
+
+# 5.3 Cabin
+# Cabin基本信息分析
+# print(dataset["Cabin"].head())
+# print(dataset["Cabin"].describe())
+# print(dataset["Cabin"].isnull().sum())
+# print(dataset["Cabin"][dataset["Cabin"].notnull()].head())
+
+# print(dataset["Cabin"])
+
+dataset["Cabin"] = pd.Series([i[0] if not pd.isnull(i) else 'X' for i in dataset['Cabin'] ])
+g = sns.countplot(dataset["Cabin"],order=['A','B','C','D','E','F','G','T','X'])
+plt.show()
+g = sns.factorplot(y="Survived",x="Cabin",data=dataset,kind="bar",order=['A','B','C','D','E','F','G','T','X'])
+g = g.set_ylabels("Survival Probability")
+plt.show()
+
+# 将Cabin中的数据加入dataset中
+dataset = pd.get_dummies(dataset, columns = ["Cabin"],prefix="Cabin")
+
+# 5.4 Ticket
+# print(dataset["Ticket"].head())
+
+# 提取Ticket中的prefix并替换列中数据
+Ticket = []
+for i in list(dataset.Ticket):
+    if not i.isdigit():
+        Ticket.append(i.replace(".", "").replace("/", "").strip().split(' ')[0])
+    else:
+        Ticket.append("X")
+
+dataset["Ticket"] = Ticket
+# print(dataset["Ticket"].head())
+
+# 相应数据添加进待训练数据集
+dataset = pd.get_dummies(dataset, columns = ["Ticket"], prefix="T")
+
+# 为Pclass创建catgorical values
+dataset["Pclass"] = dataset["Pclass"].astype("category")
+dataset = pd.get_dummies(dataset, columns=["Pclass"], prefix="Pc")
+dataset.drop(labels = ["PassengerId"], axis = 1, inplace = True)
+print(dataset.head())
 
