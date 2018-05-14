@@ -315,3 +315,55 @@ dataset = pd.get_dummies(dataset, columns=["Pclass"], prefix="Pc")
 dataset.drop(labels = ["PassengerId"], axis = 1, inplace = True)
 print(dataset.head())
 
+# ————————————————6 modeling：建模————————————————
+# 将dataset分为train和test
+train = dataset[:train_len]
+test = dataset[train_len:]
+test.drop(labels=["Survived"], axis=1,inplace=True)
+
+# train中将features和labels分开
+train["Survived"] = train["Survived"].astype(int)
+Y_train = train["Survived"]
+X_train = train.drop(labels=["Survived"], axis=1)
+
+# 6.1 simplt modeling
+# 6.11 cross validate models
+kfold = StratifiedKFold(n_splits=10)
+
+# 测试不同算法
+# random_state是随机数生成器产生的结果
+random_state = 2
+classifiers = []
+classifiers.append(SVC(random_state=random_state))
+classifiers.append(DecisionTreeClassifier(random_state=random_state))
+classifiers.append(AdaBoostClassifier(DecisionTreeClassifier(random_state=random_state),random_state=random_state,learning_rate=0.1))
+classifiers.append(RandomForestClassifier(random_state=random_state))
+classifiers.append(ExtraTreesClassifier(random_state=random_state))
+classifiers.append(GradientBoostingClassifier(random_state=random_state))
+classifiers.append(MLPClassifier(random_state=random_state))
+classifiers.append(KNeighborsClassifier())
+classifiers.append(LogisticRegression(random_state = random_state))
+classifiers.append(LinearDiscriminantAnalysis())
+
+cv_results = []
+# scoring：用户决定输出评分的格式；cv：交叉验证；n_jobs:使用的CPU核心数量
+for classifiers in classifiers:
+    cv_results.append(cross_val_score(classifiers, X_train, y=Y_train,
+                                      scoring="accuracy", cv=kfold, n_jobs=-1))
+cv_means = []
+cv_std = []
+for cv_results in cv_results:
+    cv_means.append(cv_results.mean())  # 计算均值
+    cv_std.append(cv_results.std())     # 标准差(Standard Deviation)描述各数据偏离平均数的距离（离均差）的平均数
+
+cv_res = pd.DataFrame({"CrossValMeans":cv_means,
+                       "CrossValerrors": cv_std,
+                       "Algorithm":["SVC", "DecisionTree", "AdaBoost", "RandomForest",
+                                    "ExtraTrees", "GradientBoosting", "MultipleLayerPerceptron",
+                                    "KNeighboors", "LogisticRegression", "LinearDiscriminantAnalysis"]})
+
+g = sns.barplot("CrossValMeans", "Algorithm", data=cv_res, palette="Set3",
+                orient="h", **{'xerr':cv_std})
+g.set_xlabel("Mean Accruacy")
+g = g.set_title("Cross validation scores")
+plt.show()
