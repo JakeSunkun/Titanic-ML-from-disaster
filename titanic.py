@@ -21,7 +21,7 @@ sns.set(style='white', context='notebook', palette='deep')
 # load data
 train = pd.read_csv("D:/workstation/kaggle_list/Titanic-ML-from-disaster/train.csv")
 test = pd.read_csv("D:/workstation/kaggle_list/Titanic-ML-from-disaster/test.csv")
-# IDtest = test["PassengerID"]
+IDtest = test["PassengerId"]
 
 
 # ————————————————2.2 离群样本检测————————————————
@@ -200,10 +200,12 @@ for i in index_NaN_age:
     else:
         dataset['Age'].iloc[i] = age_med
 
+dataset = dataset.where(pd.notna(dataset), dataset.mean(), axis='columns')
+
 # 重新绘Survived和Age的关系图，制箱式和琴式图
-g = sns.factorplot(x="Survived", y ="Age", data=train, kind="box")
+g = sns.factorplot(x="Survived", y="Age", data=train, kind="box")
 plt.show()
-g = sns.factorplot(x="Survived", y ="Age", data=train, kind="violin" )
+g = sns.factorplot(x="Survived", y="Age", data=train, kind="violin" )
 plt.show()
 
 # ————————————————5 Feature engineering: 特征工程————————————————
@@ -290,7 +292,7 @@ g = g.set_ylabels("Survival Probability")
 plt.show()
 
 # 将Cabin中的数据加入dataset中
-dataset = pd.get_dummies(dataset, columns = ["Cabin"],prefix="Cabin")
+dataset = pd.get_dummies(dataset, columns=["Cabin"],prefix="Cabin")
 
 # 5.4 Ticket
 # print(dataset["Ticket"].head())
@@ -312,14 +314,14 @@ dataset = pd.get_dummies(dataset, columns = ["Ticket"], prefix="T")
 # 为Pclass创建catgorical values
 dataset["Pclass"] = dataset["Pclass"].astype("category")
 dataset = pd.get_dummies(dataset, columns=["Pclass"], prefix="Pc")
-dataset.drop(labels = ["PassengerId"], axis = 1, inplace = True)
-print(dataset.head())
+dataset.drop(labels=["PassengerId"], axis=1, inplace=True)
+# print(dataset.head())
 
 # ————————————————6 modeling：建模————————————————
 # 将dataset分为train和test
 train = dataset[:train_len]
 test = dataset[train_len:]
-test.drop(labels=["Survived"], axis=1,inplace=True)
+test.drop(labels=["Survived"], axis=1, inplace=True)
 
 # train中将features和labels分开
 train["Survived"] = train["Survived"].astype(int)
@@ -336,13 +338,14 @@ random_state = 2
 classifiers = []
 classifiers.append(SVC(random_state=random_state))
 classifiers.append(DecisionTreeClassifier(random_state=random_state))
-classifiers.append(AdaBoostClassifier(DecisionTreeClassifier(random_state=random_state),random_state=random_state,learning_rate=0.1))
+classifiers.append(AdaBoostClassifier(DecisionTreeClassifier(random_state=random_state),
+                                      random_state=random_state, learning_rate=0.1))
 classifiers.append(RandomForestClassifier(random_state=random_state))
 classifiers.append(ExtraTreesClassifier(random_state=random_state))
 classifiers.append(GradientBoostingClassifier(random_state=random_state))
 classifiers.append(MLPClassifier(random_state=random_state))
 classifiers.append(KNeighborsClassifier())
-classifiers.append(LogisticRegression(random_state = random_state))
+classifiers.append(LogisticRegression(random_state=random_state))
 classifiers.append(LinearDiscriminantAnalysis())
 
 cv_results = []
@@ -356,14 +359,161 @@ for cv_results in cv_results:
     cv_means.append(cv_results.mean())  # 计算均值
     cv_std.append(cv_results.std())     # 标准差(Standard Deviation)描述各数据偏离平均数的距离（离均差）的平均数
 
-cv_res = pd.DataFrame({"CrossValMeans":cv_means,
-                       "CrossValerrors": cv_std,
-                       "Algorithm":["SVC", "DecisionTree", "AdaBoost", "RandomForest",
-                                    "ExtraTrees", "GradientBoosting", "MultipleLayerPerceptron",
-                                    "KNeighboors", "LogisticRegression", "LinearDiscriminantAnalysis"]})
+cv_res = pd.DataFrame({"CrossValMeans": cv_means, "CrossValerrors": cv_std,
+                       "Algorithm": ["SVC", "DecisionTree", "AdaBoost", "RandomForest", "ExtraTrees",
+                                     "GradientBoosting", "MultipleLayerPerceptron", "KNeighboors", "LogisticRegression",
+                                     "LinearDiscriminantAnalysis"]})
 
 g = sns.barplot("CrossValMeans", "Algorithm", data=cv_res, palette="Set3",
-                orient="h", **{'xerr':cv_std})
+                orient="h", **{'xerr': cv_std})
 g.set_xlabel("Mean Accruacy")
 g = g.set_title("Cross validation scores")
 plt.show()
+
+# AdaBoost调参
+DTC = DecisionTreeClassifier()
+adaDTC = AdaBoostClassifier(DTC, random_state=7)
+# 如何设置相关参数？
+ada_param_grid = {"base_estimator__criterion": ["gini", "entropy"],
+                  "base_estimator__splitter": ["best", "random"],
+                  "algorithm": ["SAMME", "SAMME.R"],
+                  "n_estimators": [1, 2],
+                  "learning_rate": [0.0001, 0.001, 0.01, 0.1, 0.2, 0.3, 1.5]}
+# verbose：控制冗长，越大支持更多信息
+gsdaDTC = GridSearchCV(adaDTC, param_grid=ada_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
+
+gsdaDTC.fit(X_train, Y_train)       # 执行gsdaDTC中参数调整
+ada_best = gsdaDTC.best_estimator_
+print("AdaBoost Best score:", gsdaDTC.best_score_)
+
+# ExtraTrees: 极端树
+ExtC = ExtraTreesClassifier()
+ex_param_grid = {"max_depth": [None],
+                 "max_features": [1, 3, 10],
+                 "min_samples_split": [2, 3, 10],
+                 "min_samples_leaf": [1, 3, 10],
+                 "bootstrap": [False],
+                 "n_estimators": [100, 300],
+                 "criterion": ["gini"]}
+gsExtC = GridSearchCV(ExtC, param_grid=ex_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
+gsExtC.fit(X_train, Y_train)
+ExtC_best = gsExtC.best_estimator_
+print("ExtraTrees Best score:", gsExtC.best_score_)
+
+# RFC Parameters tunning ： 随机森林
+RFC = RandomForestClassifier()
+
+# Search grid for optimal parameters
+rf_param_grid = {"max_depth": [None], "max_features": [1, 3, 10], "min_samples_split": [2, 3, 10],
+                 "min_samples_leaf": [1, 3, 10], "bootstrap": [False],
+                 "n_estimators": [100, 300], "criterion": ["gini"]}
+gsRFC = GridSearchCV(RFC, param_grid=rf_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
+gsRFC.fit(X_train, Y_train)
+RFC_best = gsRFC.best_estimator_
+# Best score
+print("RandomForestClassifier Best score:", gsRFC.best_score_)
+
+# Gradient boosting tunning：梯度提升
+GBC = GradientBoostingClassifier()
+gb_param_grid = {'loss': ["deviance"], 'n_estimators': [100, 200, 300], 'learning_rate': [0.1, 0.05, 0.01],
+                 'max_depth': [4, 8], 'min_samples_leaf': [100, 150], 'max_features': [0.3, 0.1]}
+gsGBC = GridSearchCV(GBC, param_grid=gb_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
+gsGBC.fit(X_train, Y_train)
+GBC_best = gsGBC.best_estimator_
+# Best score
+print("GradientBoostingClassifier Best score:", gsGBC.best_score_)
+
+# SVC classifier
+SVMC = SVC(probability=True)
+svc_param_grid = {'kernel': ['rbf'], 'gamma': [0.001, 0.01, 0.1, 1], 'C': [1, 10, 50, 100, 200, 300, 1000]}
+gsSVMC = GridSearchCV(SVMC, param_grid=svc_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose = 1)
+gsSVMC.fit(X_train, Y_train)
+SVMC_best = gsSVMC.best_estimator_
+# Best score
+print("SVMC Best score:", gsSVMC.best_score_)
+
+
+# _____________________定义曲线绘制函数_________________________
+def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None, n_jobs=-1, train_sizes=np.linspace(.1, 1.0, 5)):
+    plt.figure()
+    plt.title(title)
+    if ylim is not None:
+        plt.ylim(*ylim)
+    plt.xlabel("Train examplts")
+    plt.ylabel("Score")
+    train_sizes, train_scores, test_scores = learning_curve(estimator, X, y,
+                                                            cv=cv, n_jobs=n_jobs, train_sizes=train_sizes)
+    train_scores_mean = np.mean(train_scores, axis=1)
+    train_scores_std = np.std(train_scores, axis=1)
+    test_scores_mean = np.mean(test_scores, axis=1)
+    test_scores_std = np.std(test_scores, axis=1)
+    plt.grid()
+
+    plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
+                     train_scores_mean + train_scores_std, alpha=0.1, color="r")
+    plt.fill_between(train_sizes, test_scores_mean - test_scores_std,
+                     test_scores_mean + test_scores_std, alpha=0.1, color="r")
+
+    plt.plot(train_sizes, train_scores_mean, 'o-', color="r", label="Training scores")
+    plt.plot(train_sizes, test_scores_mean, 'o-', color='g', label="Cross-validation score")
+
+    plt.legend(loc="best")
+    return plt
+
+g = plot_learning_curve(gsRFC.best_estimator_, "RF mearning curves", X_train, Y_train, cv=kfold)
+g.show()
+g = plot_learning_curve(gsExtC.best_estimator_, "ExtraTrees mearning curves", X_train, Y_train, cv=kfold)
+g.show()
+g = plot_learning_curve(gsSVMC.best_estimator_, "SVC mearning curves", X_train, Y_train, cv=kfold)
+g.show()
+g = plot_learning_curve(gsdaDTC.best_estimator_, "AdaBoost mearning curves", X_train, Y_train, cv=kfold)
+g.show()
+g = plot_learning_curve(gsGBC.best_estimator_, "GradientBoosting mearning curves", X_train, Y_train, cv=kfold)
+g.show()
+
+nrows = ncols = 2
+fig, axes = plt.subplots(nrows=nrows, ncols=ncols, sharex="all")
+names_classifiers = [("AdaBoosting", ada_best), ("ExtraTrees", ExtC_best),
+                    ("RandomForest", RFC_best), ("GradientBoosting", GBC_best)]
+
+nclassifier = 0
+# 遍历names_classifiers获取分类器的名称和对应数据
+for row in range(nrows):
+    for col in range(ncols):
+        name = names_classifiers[nclassifier][0]
+        classifier = names_classifiers[nclassifier][1]
+
+        indices = np.argsort(classifier.feature_importances_)[::-1][:40]
+        g = sns.barplot(y=X_train.columns[indices][:40], x=classifier.feature_importances_[indices][:40], orient='h',
+                        ax=axes[row][col])
+
+        g.set_xlabel("Relative importance", fontsize=12)
+        g.set_ylabel("Features", fontsize=12)
+        g.tick_params(labelsize=9)
+        g.set_title(name + " feature importance")
+        nclassifier += 1
+plt.show()
+# test_null_sum = test.isnull().sum()
+# print(test_null_sum)
+test_Survived_RFC = pd.Series(RFC_best.predict(test), name="RFC")
+test_Survived_ExtC = pd.Series(ExtC_best.predict(test), name="ExtC")
+test_Survived_SVMC = pd.Series(SVMC_best.predict(test), name="SVMC")
+test_Survived_AdaC = pd.Series(ada_best.predict(test), name="AdaC")
+test_Survived_GBC = pd.Series(GBC_best.predict(test), name="GBC")
+
+ensemble_results = pd.concat([test_Survived_RFC, test_Survived_ExtC, test_Survived_SVMC,
+                              test_Survived_AdaC, test_Survived_GBC], axis=1)
+
+g = sns.heatmap(ensemble_results.corr(), annot=True)
+plt.show()
+
+# ———————————————6.2 Ensemble modeling————————————————
+votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
+                                       ('gbc', GBC_best)], voting='soft', n_jobs=-1)
+
+votingC = votingC.fit(X_train, Y_train)
+
+# ——————————————6.3 Prediction——————————————
+test_Survived = pd.Series(votingC.predict(test), name="Survived")
+results = pd.concat([IDtest, test_Survived], axis=1)
+results.to_csv("ensemble_python_voting.csv", index=False)
