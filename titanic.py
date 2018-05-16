@@ -352,6 +352,7 @@ classifiers.append(LinearDiscriminantAnalysis())
 
 cv_results = []
 # scoring：用户决定输出评分的格式；cv：交叉验证；n_jobs:使用的CPU核心数量
+
 for classifiers in classifiers:
     cv_results.append(cross_val_score(classifiers, X_train, y=Y_train,
                                       scoring="accuracy", cv=kfold, n_jobs=-1))
@@ -375,19 +376,27 @@ plt.show()
 
 # ————————————————————————调参：最优模型——————————————————————————————
 # 优化：添加MLP
+# 使用GridCV的MLp
 MLP = MLPClassifier()
-mlp_param_grid = {"hidden_layer_sizes": [50,],
-                 "max_iter": [10],
-                 "alpha": [1e-4],
-                 "verbose": [10],
-                 "solver": ['sgd'],
-                 "tol": [1e-4],
-                 "random_state": [7],
-                 "learning_rate_init": [.1]}
+# mlp_param_grid = {"hidden_layer_sizes": [50,],
+#                  "max_iter": [2000],
+#                  "alpha": [1e-4],
+#                  "verbose": [10],
+#                  "solver": ['sgd'],
+#                  "tol": [1e-4],
+#                  "random_state": [2],
+#                  "learning_rate_init": [0.1]}
+mlp_param_grid = {}
 gsMLP = GridSearchCV(MLP, param_grid=mlp_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
 gsMLP.fit(X_train, Y_train)
 mlp_best = gsMLP.best_estimator_
 print("MLP Best score:", gsMLP.best_score_)
+#
+# gsMLP = MLPClassifier(hidden_layer_sizes=(50,), max_iter=1000, alpha=1e-4,
+#                     solver='sgd', verbose=10, tol=1e-4, random_state=7,
+#                     learning_rate_init=.1)
+# mlp_best = gsMLP.fit(X_train, Y_train)
+# print("MLPTraining set score: %f" % mlp_best.score(X_train, Y_train))
 
 # AdaBoost调参
 DTC = DecisionTreeClassifier()
