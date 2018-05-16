@@ -375,17 +375,37 @@ plt.show()
 
 
 # ————————————————————————调参：最优模型——————————————————————————————
+# 优化：加入xgboost
+gbm_best = xgb.XGBClassifier(
+        #learning_rate = 0.02,
+     n_estimators= 2000,
+     max_depth= 4,
+     min_child_weight= 2,
+     #gamma=1,
+     gamma=0.9,
+     subsample=0.8,
+     colsample_bytree=0.8,
+     objective= 'binary:logistic',
+     nthread= -1,
+     scale_pos_weight=1).fit(X_train, Y_train)
+XGB = xgb.XGBClassifier()
+gbm_parap_grid = {"n_estimators": [2000],
+                  "max_depth": [4],
+                  "min_child_weight": [2],
+                  "gamma": [0.9],
+                  "subsample": [0.8],
+                  "colsample_bytree": [0.8],
+                  "objective": ['binary:logistic'],
+                  "nthread": [-1],
+                  "scale_pos_weight": [1]}
+gsXGB = GridSearchCV(XGB, param_grid=gbm_parap_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
+gsXGB.fit(X_train, Y_train)
+xgb_best = gsXGB.best_estimator_
+print("XGB Best score:", gsXGB.best_score_)
+
 # 优化：添加MLP
 # 使用GridCV的MLp
 MLP = MLPClassifier()
-# mlp_param_grid = {"hidden_layer_sizes": [50,],
-#                  "max_iter": [2000],
-#                  "alpha": [1e-4],
-#                  "verbose": [10],
-#                  "solver": ['sgd'],
-#                  "tol": [1e-4],
-#                  "random_state": [2],
-#                  "learning_rate_init": [0.1]}
 mlp_param_grid = {}
 gsMLP = GridSearchCV(MLP, param_grid=mlp_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
 gsMLP.fit(X_train, Y_train)
@@ -487,7 +507,10 @@ def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None, n_jobs=-1, t
 
     plt.legend(loc="best")
     return plt
-
+g = plot_learning_curve(gsXGB.best_estimator_, "XGB mearning curves", X_train, Y_train, cv=kfold)
+g.show()
+g = plot_learning_curve(gsMLP.best_estimator_, "MLP mearning curves", X_train, Y_train, cv=kfold)
+g.show()
 g = plot_learning_curve(gsRFC.best_estimator_, "RF mearning curves", X_train, Y_train, cv=kfold)
 g.show()
 g = plot_learning_curve(gsExtC.best_estimator_, "ExtraTrees mearning curves", X_train, Y_train, cv=kfold)
@@ -499,61 +522,49 @@ g.show()
 g = plot_learning_curve(gsGBC.best_estimator_, "GradientBoosting mearning curves", X_train, Y_train, cv=kfold)
 g.show()
 
-nrows = ncols = 2
-fig, axes = plt.subplots(nrows=nrows, ncols=ncols, sharex="all")
-names_classifiers = [("AdaBoosting", ada_best), ("ExtraTrees", ExtC_best),
-                    ("RandomForest", RFC_best), ("GradientBoosting", GBC_best)]
-
-nclassifier = 0
+# nrows = ncols = 2
+# fig, axes = plt.subplots(nrows=nrows, ncols=ncols, sharex="all")
+# names_classifiers = [("AdaBoosting", ada_best), ("ExtraTrees", ExtC_best),
+#                     ("RandomForest", RFC_best), ("GradientBoosting", GBC_best)]
+#
+# nclassifier = 0
 # 遍历names_classifiers获取分类器的名称和对应数据
-for row in range(nrows):
-    for col in range(ncols):
-        name = names_classifiers[nclassifier][0]
-        classifier = names_classifiers[nclassifier][1]
+# for row in range(nrows):
+#     for col in range(ncols):
+#         name = names_classifiers[nclassifier][0]
+#         classifier = names_classifiers[nclassifier][1]
+#
+#         indices = np.argsort(classifier.feature_importances_)[::-1][:40]
+#         g = sns.barplot(y=X_train.columns[indices][:40], x=classifier.feature_importances_[indices][:40], orient='h',
+#                         ax=axes[row][col])
+#
+#         g.set_xlabel("Relative importance", fontsize=12)
+#         g.set_ylabel("Features", fontsize=12)
+#         g.tick_params(labelsize=9)
+#         g.set_title(name + " feature importance")
+#         nclassifier += 1
+# plt.show()
 
-        indices = np.argsort(classifier.feature_importances_)[::-1][:40]
-        g = sns.barplot(y=X_train.columns[indices][:40], x=classifier.feature_importances_[indices][:40], orient='h',
-                        ax=axes[row][col])
-
-        g.set_xlabel("Relative importance", fontsize=12)
-        g.set_ylabel("Features", fontsize=12)
-        g.tick_params(labelsize=9)
-        g.set_title(name + " feature importance")
-        nclassifier += 1
-plt.show()
-# test_null_sum = test.isnull().sum()
-# print(test_null_sum)
-test_Survived_RFC = pd.Series(RFC_best.predict(test), name="RFC")
-test_Survived_ExtC = pd.Series(ExtC_best.predict(test), name="ExtC")
-test_Survived_SVMC = pd.Series(SVMC_best.predict(test), name="SVMC")
-test_Survived_AdaC = pd.Series(ada_best.predict(test), name="AdaC")
-test_Survived_GBC = pd.Series(GBC_best.predict(test), name="GBC")
-
-ensemble_results = pd.concat([test_Survived_RFC, test_Survived_ExtC, test_Survived_SVMC,
-                              test_Survived_AdaC, test_Survived_GBC], axis=1)
-
-g = sns.heatmap(ensemble_results.corr(), annot=True)
-plt.show()
+# test_Survived_RFC = pd.Series(RFC_best.predict(test), name="RFC")
+# test_Survived_ExtC = pd.Series(ExtC_best.predict(test), name="ExtC")
+# test_Survived_SVMC = pd.Series(SVMC_best.predict(test), name="SVMC")
+# test_Survived_AdaC = pd.Series(ada_best.predict(test), name="AdaC")
+# test_Survived_GBC = pd.Series(GBC_best.predict(test), name="GBC")
+#
+# ensemble_results = pd.concat([test_Survived_RFC, test_Survived_ExtC, test_Survived_SVMC,
+#                               test_Survived_AdaC, test_Survived_GBC], axis=1)
+#
+# g = sns.heatmap(ensemble_results.corr(), annot=True)
+# plt.show()
 
 # ———————————————6.2 Ensemble modeling————————————————
 
-gbm_best = xgb.XGBClassifier(
-        #learning_rate = 0.02,
-     n_estimators= 2000,
-     max_depth= 4,
-     min_child_weight= 2,
-     #gamma=1,
-     gamma=0.9,
-     subsample=0.8,
-     colsample_bytree=0.8,
-     objective= 'binary:logistic',
-     nthread= -1,
-     scale_pos_weight=1).fit(X_train, Y_train)
 # gbm_best = gbm.best_estimator_
 
 votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
-                                       ('gbc', GBC_best), ('gbm', gbm_best), ('mlp', mlp_best)], voting='soft', n_jobs=-1)
-
+                                       ('gbc', GBC_best), ('xgb', xgb_best)], voting='soft', n_jobs=-1)
+# votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
+#                                        ('gbc', GBC_best), ('gbm', gbm_best)], voting='soft', n_jobs=-1)
 votingC = votingC.fit(X_train, Y_train)
 
 # ——————————————6.3 Prediction——————————————
