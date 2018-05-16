@@ -508,12 +508,15 @@ g = sns.heatmap(ensemble_results.corr(), annot=True)
 plt.show()
 
 # ———————————————6.2 Ensemble modeling————————————————
-votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
+# votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
+#                                        ('gbc', GBC_best)], voting='soft', n_jobs=-1)
+# 去掉表现相对较差的SVC
+votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('adac', ada_best),
                                        ('gbc', GBC_best)], voting='soft', n_jobs=-1)
-
 votingC = votingC.fit(X_train, Y_train)
 
 # ——————————————6.3 Prediction——————————————
 test_Survived = pd.Series(votingC.predict(test), name="Survived")
 results = pd.concat([IDtest, test_Survived], axis=1)
 results.to_csv("ensemble_python_voting.csv", index=False)
+
