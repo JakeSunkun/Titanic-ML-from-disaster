@@ -13,6 +13,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV, cross_val_score, StratifiedKFold, learning_curve
+
+import xgboost as xgb
 # ————————————————1.1 简介————————————————
 # kaggle竞赛数据：Titanic: Machine Learning from Disaster
 
@@ -508,11 +510,23 @@ g = sns.heatmap(ensemble_results.corr(), annot=True)
 plt.show()
 
 # ———————————————6.2 Ensemble modeling————————————————
-# votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
-#                                        ('gbc', GBC_best)], voting='soft', n_jobs=-1)
-# 去掉表现相对较差的SVC
-votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('adac', ada_best),
-                                       ('gbc', GBC_best)], voting='soft', n_jobs=-1)
+gbm_best = xgb.XGBClassifier(
+        #learning_rate = 0.02,
+     n_estimators= 2000,
+     max_depth= 4,
+     min_child_weight= 2,
+     #gamma=1,
+     gamma=0.9,
+     subsample=0.8,
+     colsample_bytree=0.8,
+     objective= 'binary:logistic',
+     nthread= -1,
+     scale_pos_weight=1).fit(X_train, Y_train)
+# gbm_best = gbm.best_estimator_
+
+votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
+                                       ('gbc', GBC_best), ('gbm', gbm_best)], voting='soft', n_jobs=-1)
+
 votingC = votingC.fit(X_train, Y_train)
 
 # ——————————————6.3 Prediction——————————————
