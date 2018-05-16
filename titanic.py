@@ -372,6 +372,23 @@ g.set_xlabel("Mean Accruacy")
 g = g.set_title("Cross validation scores")
 plt.show()
 
+
+# ————————————————————————调参：最优模型——————————————————————————————
+# 优化：添加MLP
+MLP = MLPClassifier()
+mlp_param_grid = {"hidden_layer_sizes": [50,],
+                 "max_iter": [10],
+                 "alpha": [1e-4],
+                 "verbose": [10],
+                 "solver": ['sgd'],
+                 "tol": [1e-4],
+                 "random_state": [7],
+                 "learning_rate_init": [.1]}
+gsMLP = GridSearchCV(MLP, param_grid=mlp_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
+gsMLP.fit(X_train, Y_train)
+mlp_best = gsMLP.best_estimator_
+print("MLP Best score:", gsMLP.best_score_)
+
 # AdaBoost调参
 DTC = DecisionTreeClassifier()
 adaDTC = AdaBoostClassifier(DTC, random_state=7)
@@ -510,6 +527,7 @@ g = sns.heatmap(ensemble_results.corr(), annot=True)
 plt.show()
 
 # ———————————————6.2 Ensemble modeling————————————————
+
 gbm_best = xgb.XGBClassifier(
         #learning_rate = 0.02,
      n_estimators= 2000,
@@ -525,7 +543,7 @@ gbm_best = xgb.XGBClassifier(
 # gbm_best = gbm.best_estimator_
 
 votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
-                                       ('gbc', GBC_best), ('gbm', gbm_best)], voting='soft', n_jobs=-1)
+                                       ('gbc', GBC_best), ('gbm', gbm_best), ('mlp', mlp_best)], voting='soft', n_jobs=-1)
 
 votingC = votingC.fit(X_train, Y_train)
 
