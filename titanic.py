@@ -286,18 +286,19 @@ dataset = pd.get_dummies(dataset, columns=["Embarked"], prefix="Em")
 
 # print(dataset["Cabin"])
 
-dataset["Cabin"] = pd.Series([i[0] if not pd.isnull(i) else 'X' for i in dataset['Cabin'] ])
-g = sns.countplot(dataset["Cabin"],order=['A','B','C','D','E','F','G','T','X'])
-plt.show()
-g = sns.factorplot(y="Survived",x="Cabin",data=dataset,kind="bar",order=['A','B','C','D','E','F','G','T','X'])
-g = g.set_ylabels("Survival Probability")
-plt.show()
-
-# 将Cabin中的数据加入dataset中
-dataset = pd.get_dummies(dataset, columns=["Cabin"],prefix="Cabin")
+# dataset["Cabin"] = pd.Series([i[0] if not pd.isnull(i) else 'X' for i in dataset['Cabin'] ])
+# g = sns.countplot(dataset["Cabin"],order=['A','B','C','D','E','F','G','T','X'])
+# plt.show()
+# g = sns.factorplot(y="Survived",x="Cabin",data=dataset,kind="bar",order=['A','B','C','D','E','F','G','T','X'])
+# g = g.set_ylabels("Survival Probability")
+# plt.show()
+#
+# # 将Cabin中的数据加入dataset中
+# dataset = pd.get_dummies(dataset, columns=["Cabin"],prefix="Cabin")
+dataset.drop(labels = ["Cabin"], axis = 1, inplace = True)
 
 # 5.4 Ticket
-# print(dataset["Ticket"].head())
+print(dataset["Ticket"].head())
 
 # 提取Ticket中的prefix并替换列中数据
 Ticket = []
@@ -308,16 +309,19 @@ for i in list(dataset.Ticket):
         Ticket.append("X")
 
 dataset["Ticket"] = Ticket
-# print(dataset["Ticket"].head())
+
+print(dataset["Ticket"].head())
 
 # 相应数据添加进待训练数据集
 dataset = pd.get_dummies(dataset, columns = ["Ticket"], prefix="T")
+# dataset.drop(labels = ["Ticket"], axis = 1, inplace = True)
 
 # 为Pclass创建catgorical values
 dataset["Pclass"] = dataset["Pclass"].astype("category")
 dataset = pd.get_dummies(dataset, columns=["Pclass"], prefix="Pc")
 dataset.drop(labels=["PassengerId"], axis=1, inplace=True)
-# print(dataset.head())
+head5 = dataset.head(5)
+print(head5)
 
 # ————————————————6 modeling：建模————————————————
 # 将dataset分为train和test
@@ -565,7 +569,7 @@ g.show()
 # votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
 #                                        ('gbc', GBC_best), ('xgb', xgb_best)], voting='soft', n_jobs=-1)
 votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
-                                       ('gbc', GBC_best)], voting='soft', n_jobs=-1)
+                                       ('gbc', GBC_best), ('xgb', xgb_best)], voting='soft', n_jobs=-1)
 votingC = votingC.fit(X_train, Y_train)
 
 # ——————————————6.3 Prediction——————————————
