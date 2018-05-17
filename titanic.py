@@ -336,6 +336,7 @@ kfold = StratifiedKFold(n_splits=10)
 
 # 测试不同算法
 # random_state是随机数生成器产生的结果
+# 保证重新生成的随机数是相同的，只要内部数字一样
 random_state = 2
 classifiers = []
 classifiers.append(SVC(random_state=random_state))
@@ -561,10 +562,10 @@ g.show()
 
 # gbm_best = gbm.best_estimator_
 
-votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
-                                       ('gbc', GBC_best), ('xgb', xgb_best)], voting='soft', n_jobs=-1)
 # votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
-#                                        ('gbc', GBC_best), ('gbm', gbm_best)], voting='soft', n_jobs=-1)
+#                                        ('gbc', GBC_best), ('xgb', xgb_best)], voting='soft', n_jobs=-1)
+votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
+                                       ('gbc', GBC_best)], voting='soft', n_jobs=-1)
 votingC = votingC.fit(X_train, Y_train)
 
 # ——————————————6.3 Prediction——————————————
