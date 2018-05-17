@@ -87,7 +87,7 @@ info_d = train.describe()      # 显示描述信息
 # 数值之间的关联度
 plt.figure()
 g_all = sns.heatmap(train[["Survived", "SibSp", "Parch", "Age", "Fare"]].corr(),
-                        annot=True, fmt=".2f", cmap="coolwarm")
+                    fmt=".2f", cmap="coolwarm")
 g_all = g_all.set_title("Graph3.1 Correlation matrix between numerical values ")
 # g_heatmap.show()
 plt.show()
@@ -130,12 +130,12 @@ info_fare = dataset["Fare"].isnull().sum()
 
 # print(type(dataset["Fare"]))
 
-g_fare = sns.distplot(train["Fare"], color="m", label="Skewness: %.2f"%(dataset["Fare"].skew()))
+g_fare = sns.distplot(train["Fare"], color="m", label="Skewness: %.2f" % (dataset["Fare"].skew()))
 g_fare = g_fare.legend(loc="best")
 plt.show()
 # 平滑处理
-train["Fare"] = train["Fare"].map(lambda i:np.log(i) if i > 0 else 0)
-g_fare_log = sns.distplot(train["Fare"], color="m", label="Skewness: %.2f"%(dataset["Fare"].skew()))
+train["Fare"] = train["Fare"].map(lambda i: np.log(i) if i > 0 else 0)
+g_fare_log = sns.distplot(train["Fare"], color="m", label="Skewness: %.2f" % (dataset["Fare"].skew()))
 g_fare_log = g_fare_log.legend(loc="best")
 plt.show()
 
@@ -195,8 +195,8 @@ index_NaN_age = list(dataset["Age"][dataset["Age"].isnull()].index)
 for i in index_NaN_age:
     age_med = dataset["Age"].median()
     age_pred = dataset["Age"][((dataset["SibSp"] == dataset.iloc[i]["SibSp"])
-                               &(dataset["Parch"] == dataset.iloc[i]["Parch"])
-                               &(dataset["Pclass"] == dataset.iloc[i]["Pclass"]))].median()
+                               & (dataset["Parch"] == dataset.iloc[i]["Parch"])
+                               & (dataset["Pclass"] == dataset.iloc[i]["Pclass"]))].median()
     if not np.isnan(age_pred):
         dataset["Age"].iloc[i] = age_pred
     else:
@@ -253,10 +253,10 @@ g = g.set_ylabels("Survival Probability")
 plt.show()
 
 # 优化统计展示效果
-dataset['Single'] = dataset['Fsize'].map(lambda s: 1 if s ==1 else 0)
-dataset['SmallF'] = dataset['Fsize'].map(lambda s: 1 if s ==2 else 0)
-dataset['MedF'] = dataset['Fsize'].map(lambda s: 1 if 3<=s<=4 else 0)
-dataset['LargeF'] = dataset['Fsize'].map(lambda s: 1 if s>=5 else 0)
+dataset['Single'] = dataset['Fsize'].map(lambda s: 1 if s == 1 else 0)
+dataset['SmallF'] = dataset['Fsize'].map(lambda s: 1 if s == 2 else 0)
+dataset['MedF'] = dataset['Fsize'].map(lambda s: 1 if 3 <=s<= 4 else 0)
+dataset['LargeF'] = dataset['Fsize'].map(lambda s: 1 if s >= 5 else 0)
 
 g = sns.factorplot(x="Single", y="Survived", data=dataset, kind="bar")
 g = g.set_ylabels("Survived Probability")
@@ -295,7 +295,7 @@ dataset = pd.get_dummies(dataset, columns=["Embarked"], prefix="Em")
 #
 # # 将Cabin中的数据加入dataset中
 # dataset = pd.get_dummies(dataset, columns=["Cabin"],prefix="Cabin")
-dataset.drop(labels = ["Cabin"], axis = 1, inplace = True)
+dataset.drop(labels=["Cabin"], axis=1, inplace=True)
 
 # 5.4 Ticket
 # print(dataset["Ticket"].head())
@@ -313,7 +313,7 @@ dataset["Ticket"] = Ticket
 # print(dataset["Ticket"].head())
 
 # 相应数据添加进待训练数据集
-dataset = pd.get_dummies(dataset, columns = ["Ticket"], prefix="T")
+dataset = pd.get_dummies(dataset, columns=["Ticket"], prefix="T")
 # dataset.drop(labels = ["Ticket"], axis = 1, inplace = True)
 
 # 为Pclass创建catgorical values
@@ -352,7 +352,6 @@ head5 = dataset.head(5)
 #     else:
 #         Fare_level.append(4)
 # dataset['Fare_level'] = Fare_level
-
 
 
 # ————————————————6 modeling：建模————————————————
@@ -413,18 +412,9 @@ plt.show()
 
 # ————————————————————————调参：最优模型——————————————————————————————
 # 优化：加入xgboost
-gbm_best = xgb.XGBClassifier(
-        #learning_rate = 0.02,
-     n_estimators= 2000,
-     max_depth= 4,
-     min_child_weight= 2,
-     #gamma=1,
-     gamma=0.9,
-     subsample=0.8,
-     colsample_bytree=0.8,
-     objective= 'binary:logistic',
-     nthread= -1,
-     scale_pos_weight=1).fit(X_train, Y_train)
+gbm_best = xgb.XGBClassifier(n_estimators=2000, max_depth=4, min_child_weight=2, gamma=0.9, subsample=0.8,
+                             colsample_bytree=0.8, objective='binary:logistic', nthread=-1,
+                             scale_pos_weight=1).fit(X_train, Y_train)
 XGB = xgb.XGBClassifier()
 gbm_parap_grid = {"n_estimators": [2000],
                   "max_depth": [4],
@@ -511,7 +501,7 @@ print("GradientBoostingClassifier Best score:", gsGBC.best_score_)
 # SVC classifier
 SVMC = SVC(probability=True)
 svc_param_grid = {'kernel': ['rbf'], 'gamma': [0.001, 0.01, 0.1, 1], 'C': [1, 10, 50, 100, 200, 300, 1000]}
-gsSVMC = GridSearchCV(SVMC, param_grid=svc_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose = 1)
+gsSVMC = GridSearchCV(SVMC, param_grid=svc_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
 gsSVMC.fit(X_train, Y_train)
 SVMC_best = gsSVMC.best_estimator_
 # Best score
