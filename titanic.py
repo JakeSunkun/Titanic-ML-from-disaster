@@ -298,7 +298,7 @@ dataset = pd.get_dummies(dataset, columns=["Embarked"], prefix="Em")
 dataset.drop(labels = ["Cabin"], axis = 1, inplace = True)
 
 # 5.4 Ticket
-print(dataset["Ticket"].head())
+# print(dataset["Ticket"].head())
 
 # 提取Ticket中的prefix并替换列中数据
 Ticket = []
@@ -310,7 +310,7 @@ for i in list(dataset.Ticket):
 
 dataset["Ticket"] = Ticket
 
-print(dataset["Ticket"].head())
+# print(dataset["Ticket"].head())
 
 # 相应数据添加进待训练数据集
 dataset = pd.get_dummies(dataset, columns = ["Ticket"], prefix="T")
@@ -321,7 +321,39 @@ dataset["Pclass"] = dataset["Pclass"].astype("category")
 dataset = pd.get_dummies(dataset, columns=["Pclass"], prefix="Pc")
 dataset.drop(labels=["PassengerId"], axis=1, inplace=True)
 head5 = dataset.head(5)
-print(head5)
+# print(head5)
+
+# # 针对Fare进行处理
+# dataset['FareBand'] = pd.qcut(dataset['Fare'], 4)
+# g = sns.factorplot(x="FareBand", y="Survived", data=dataset, kind="bar")
+# g = g.set_ylabels("Survived Probability")
+# plt.show()
+
+# g = sns.factorplot(x="Fare4", y="Survived", data=dataset, kind="bar")
+# g = g.set_ylabels("Survived Probability")
+# plt.show()
+# g = sns.factorplot(x="Fare3", y="Survived", data=dataset, kind="bar")
+# g = g.set_ylabels("Survived Probability")
+# plt.show()
+# g = sns.factorplot(x="Fare2", y="Survived", data=dataset, kind="bar")
+# g = g.set_ylabels("Survived Probability")
+# plt.show()
+# g = sns.factorplot(x="Fare1", y="Survived", data=dataset, kind="bar")
+# g = g.set_ylabels("Survived Probability")
+# plt.show()
+# Fare_level = []
+# for i in dataset['Fare']:
+#     if i <= 7.91:
+#         Fare_level.append(1)
+#     elif 7.91<i<=14.454:
+#         Fare_level.append(2)
+#     elif 14.454<i<=31:
+#         Fare_level.append(3)
+#     else:
+#         Fare_level.append(4)
+# dataset['Fare_level'] = Fare_level
+
+
 
 # ————————————————6 modeling：建模————————————————
 # 将dataset分为train和test
