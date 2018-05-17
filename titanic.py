@@ -13,6 +13,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV, cross_val_score, StratifiedKFold, learning_curve
+
+import xgboost as xgb
 # ————————————————1.1 简介————————————————
 # kaggle竞赛数据：Titanic: Machine Learning from Disaster
 
@@ -284,18 +286,19 @@ dataset = pd.get_dummies(dataset, columns=["Embarked"], prefix="Em")
 
 # print(dataset["Cabin"])
 
-dataset["Cabin"] = pd.Series([i[0] if not pd.isnull(i) else 'X' for i in dataset['Cabin'] ])
-g = sns.countplot(dataset["Cabin"],order=['A','B','C','D','E','F','G','T','X'])
-plt.show()
-g = sns.factorplot(y="Survived",x="Cabin",data=dataset,kind="bar",order=['A','B','C','D','E','F','G','T','X'])
-g = g.set_ylabels("Survival Probability")
-plt.show()
-
-# 将Cabin中的数据加入dataset中
-dataset = pd.get_dummies(dataset, columns=["Cabin"],prefix="Cabin")
+# dataset["Cabin"] = pd.Series([i[0] if not pd.isnull(i) else 'X' for i in dataset['Cabin'] ])
+# g = sns.countplot(dataset["Cabin"],order=['A','B','C','D','E','F','G','T','X'])
+# plt.show()
+# g = sns.factorplot(y="Survived",x="Cabin",data=dataset,kind="bar",order=['A','B','C','D','E','F','G','T','X'])
+# g = g.set_ylabels("Survival Probability")
+# plt.show()
+#
+# # 将Cabin中的数据加入dataset中
+# dataset = pd.get_dummies(dataset, columns=["Cabin"],prefix="Cabin")
+dataset.drop(labels = ["Cabin"], axis = 1, inplace = True)
 
 # 5.4 Ticket
-# print(dataset["Ticket"].head())
+print(dataset["Ticket"].head())
 
 # 提取Ticket中的prefix并替换列中数据
 Ticket = []
@@ -306,16 +309,19 @@ for i in list(dataset.Ticket):
         Ticket.append("X")
 
 dataset["Ticket"] = Ticket
-# print(dataset["Ticket"].head())
+
+print(dataset["Ticket"].head())
 
 # 相应数据添加进待训练数据集
 dataset = pd.get_dummies(dataset, columns = ["Ticket"], prefix="T")
+# dataset.drop(labels = ["Ticket"], axis = 1, inplace = True)
 
 # 为Pclass创建catgorical values
 dataset["Pclass"] = dataset["Pclass"].astype("category")
 dataset = pd.get_dummies(dataset, columns=["Pclass"], prefix="Pc")
 dataset.drop(labels=["PassengerId"], axis=1, inplace=True)
-# print(dataset.head())
+head5 = dataset.head(5)
+print(head5)
 
 # ————————————————6 modeling：建模————————————————
 # 将dataset分为train和test
@@ -334,6 +340,7 @@ kfold = StratifiedKFold(n_splits=10)
 
 # 测试不同算法
 # random_state是随机数生成器产生的结果
+# 保证重新生成的随机数是相同的，只要内部数字一样
 random_state = 2
 classifiers = []
 classifiers.append(SVC(random_state=random_state))
@@ -350,6 +357,7 @@ classifiers.append(LinearDiscriminantAnalysis())
 
 cv_results = []
 # scoring：用户决定输出评分的格式；cv：交叉验证；n_jobs:使用的CPU核心数量
+
 for classifiers in classifiers:
     cv_results.append(cross_val_score(classifiers, X_train, y=Y_train,
                                       scoring="accuracy", cv=kfold, n_jobs=-1))
@@ -369,6 +377,51 @@ g = sns.barplot("CrossValMeans", "Algorithm", data=cv_res, palette="Set3",
 g.set_xlabel("Mean Accruacy")
 g = g.set_title("Cross validation scores")
 plt.show()
+
+
+# ————————————————————————调参：最优模型——————————————————————————————
+# 优化：加入xgboost
+gbm_best = xgb.XGBClassifier(
+        #learning_rate = 0.02,
+     n_estimators= 2000,
+     max_depth= 4,
+     min_child_weight= 2,
+     #gamma=1,
+     gamma=0.9,
+     subsample=0.8,
+     colsample_bytree=0.8,
+     objective= 'binary:logistic',
+     nthread= -1,
+     scale_pos_weight=1).fit(X_train, Y_train)
+XGB = xgb.XGBClassifier()
+gbm_parap_grid = {"n_estimators": [2000],
+                  "max_depth": [4],
+                  "min_child_weight": [2],
+                  "gamma": [0.9],
+                  "subsample": [0.8],
+                  "colsample_bytree": [0.8],
+                  "objective": ['binary:logistic'],
+                  "nthread": [-1],
+                  "scale_pos_weight": [1]}
+gsXGB = GridSearchCV(XGB, param_grid=gbm_parap_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
+gsXGB.fit(X_train, Y_train)
+xgb_best = gsXGB.best_estimator_
+print("XGB Best score:", gsXGB.best_score_)
+
+# 优化：添加MLP
+# 使用GridCV的MLp
+MLP = MLPClassifier()
+mlp_param_grid = {}
+gsMLP = GridSearchCV(MLP, param_grid=mlp_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
+gsMLP.fit(X_train, Y_train)
+mlp_best = gsMLP.best_estimator_
+print("MLP Best score:", gsMLP.best_score_)
+#
+# gsMLP = MLPClassifier(hidden_layer_sizes=(50,), max_iter=1000, alpha=1e-4,
+#                     solver='sgd', verbose=10, tol=1e-4, random_state=7,
+#                     learning_rate_init=.1)
+# mlp_best = gsMLP.fit(X_train, Y_train)
+# print("MLPTraining set score: %f" % mlp_best.score(X_train, Y_train))
 
 # AdaBoost调参
 DTC = DecisionTreeClassifier()
@@ -459,7 +512,10 @@ def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None, n_jobs=-1, t
 
     plt.legend(loc="best")
     return plt
-
+g = plot_learning_curve(gsXGB.best_estimator_, "XGB mearning curves", X_train, Y_train, cv=kfold)
+g.show()
+g = plot_learning_curve(gsMLP.best_estimator_, "MLP mearning curves", X_train, Y_train, cv=kfold)
+g.show()
 g = plot_learning_curve(gsRFC.best_estimator_, "RF mearning curves", X_train, Y_train, cv=kfold)
 g.show()
 g = plot_learning_curve(gsExtC.best_estimator_, "ExtraTrees mearning curves", X_train, Y_train, cv=kfold)
@@ -471,49 +527,53 @@ g.show()
 g = plot_learning_curve(gsGBC.best_estimator_, "GradientBoosting mearning curves", X_train, Y_train, cv=kfold)
 g.show()
 
-nrows = ncols = 2
-fig, axes = plt.subplots(nrows=nrows, ncols=ncols, sharex="all")
-names_classifiers = [("AdaBoosting", ada_best), ("ExtraTrees", ExtC_best),
-                    ("RandomForest", RFC_best), ("GradientBoosting", GBC_best)]
-
-nclassifier = 0
+# nrows = ncols = 2
+# fig, axes = plt.subplots(nrows=nrows, ncols=ncols, sharex="all")
+# names_classifiers = [("AdaBoosting", ada_best), ("ExtraTrees", ExtC_best),
+#                     ("RandomForest", RFC_best), ("GradientBoosting", GBC_best)]
+#
+# nclassifier = 0
 # 遍历names_classifiers获取分类器的名称和对应数据
-for row in range(nrows):
-    for col in range(ncols):
-        name = names_classifiers[nclassifier][0]
-        classifier = names_classifiers[nclassifier][1]
+# for row in range(nrows):
+#     for col in range(ncols):
+#         name = names_classifiers[nclassifier][0]
+#         classifier = names_classifiers[nclassifier][1]
+#
+#         indices = np.argsort(classifier.feature_importances_)[::-1][:40]
+#         g = sns.barplot(y=X_train.columns[indices][:40], x=classifier.feature_importances_[indices][:40], orient='h',
+#                         ax=axes[row][col])
+#
+#         g.set_xlabel("Relative importance", fontsize=12)
+#         g.set_ylabel("Features", fontsize=12)
+#         g.tick_params(labelsize=9)
+#         g.set_title(name + " feature importance")
+#         nclassifier += 1
+# plt.show()
 
-        indices = np.argsort(classifier.feature_importances_)[::-1][:40]
-        g = sns.barplot(y=X_train.columns[indices][:40], x=classifier.feature_importances_[indices][:40], orient='h',
-                        ax=axes[row][col])
-
-        g.set_xlabel("Relative importance", fontsize=12)
-        g.set_ylabel("Features", fontsize=12)
-        g.tick_params(labelsize=9)
-        g.set_title(name + " feature importance")
-        nclassifier += 1
-plt.show()
-# test_null_sum = test.isnull().sum()
-# print(test_null_sum)
-test_Survived_RFC = pd.Series(RFC_best.predict(test), name="RFC")
-test_Survived_ExtC = pd.Series(ExtC_best.predict(test), name="ExtC")
-test_Survived_SVMC = pd.Series(SVMC_best.predict(test), name="SVMC")
-test_Survived_AdaC = pd.Series(ada_best.predict(test), name="AdaC")
-test_Survived_GBC = pd.Series(GBC_best.predict(test), name="GBC")
-
-ensemble_results = pd.concat([test_Survived_RFC, test_Survived_ExtC, test_Survived_SVMC,
-                              test_Survived_AdaC, test_Survived_GBC], axis=1)
-
-g = sns.heatmap(ensemble_results.corr(), annot=True)
-plt.show()
+# test_Survived_RFC = pd.Series(RFC_best.predict(test), name="RFC")
+# test_Survived_ExtC = pd.Series(ExtC_best.predict(test), name="ExtC")
+# test_Survived_SVMC = pd.Series(SVMC_best.predict(test), name="SVMC")
+# test_Survived_AdaC = pd.Series(ada_best.predict(test), name="AdaC")
+# test_Survived_GBC = pd.Series(GBC_best.predict(test), name="GBC")
+#
+# ensemble_results = pd.concat([test_Survived_RFC, test_Survived_ExtC, test_Survived_SVMC,
+#                               test_Survived_AdaC, test_Survived_GBC], axis=1)
+#
+# g = sns.heatmap(ensemble_results.corr(), annot=True)
+# plt.show()
 
 # ———————————————6.2 Ensemble modeling————————————————
-votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
-                                       ('gbc', GBC_best)], voting='soft', n_jobs=-1)
 
+# gbm_best = gbm.best_estimator_
+
+# votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
+#                                        ('gbc', GBC_best), ('xgb', xgb_best)], voting='soft', n_jobs=-1)
+votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
+                                       ('gbc', GBC_best), ('xgb', xgb_best)], voting='soft', n_jobs=-1)
 votingC = votingC.fit(X_train, Y_train)
 
 # ——————————————6.3 Prediction——————————————
 test_Survived = pd.Series(votingC.predict(test), name="Survived")
 results = pd.concat([IDtest, test_Survived], axis=1)
 results.to_csv("ensemble_python_voting.csv", index=False)
+
