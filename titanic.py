@@ -110,8 +110,8 @@ g_age = g_age.map(sns.distplot, "Age")
 plt.show()
 
 # Age曲线分布
-g = sns.kdeplot(train["Age"][(train["Survived"] == 0) & (train["Age"].notnull())], color="Red", shade = True)
-g = sns.kdeplot(train["Age"][(train["Survived"] == 1) & (train["Age"].notnull())], ax =g, color="Blue", shade= True)
+g = sns.kdeplot(train["Age"][(train["Survived"] == 0) & (train["Age"].notnull())], color="Red", shade=True)
+g = sns.kdeplot(train["Age"][(train["Survived"] == 1) & (train["Age"].notnull())], ax =g, color="Blue", shade=True)
 g.set_xlabel("Age")
 g.set_ylabel("Frequency")
 g = g.legend(["Not Survived","Survived"])
@@ -159,17 +159,19 @@ g_pclass_sex = g_pclass_sex.set_ylabels("survival probability")
 plt.show()
 
 # 登船港口数据分析
-# 填充空缺数据为登船人数最多的港口
-info_embarked = dataset["Embarked"].isnull().sum()
-dataset["Embarked"] = dataset["Embarked"].fillna("S")
-
-g_embarked = sns.factorplot(x="Embarked", y="Survived", data=train, size=6, kind="bar", palette="muted")
-g_embarked = g_embarked.set_ylabels("surveved probability")
-plt.show()
-# col:不同登船港口分别划分，每个条目里面是Pclass船舱等级的划分
-g_embarked_count = sns.factorplot("Pclass", col="Embarked", data=train, size=6, kind="count", palette="muted")
-g_embarked_count = g_embarked_count.set_ylabels("Count")
-plt.show()
+dataset.drop(labels=["Embarked"], axis=1, inplace=True)
+#
+# # 填充空缺数据为登船人数最多的港口
+# info_embarked = dataset["Embarked"].isnull().sum()
+# dataset["Embarked"] = dataset["Embarked"].fillna("S")
+#
+# g_embarked = sns.factorplot(x="Embarked", y="Survived", data=train, size=6, kind="bar", palette="muted")
+# g_embarked = g_embarked.set_ylabels("surveved probability")
+# plt.show()
+# # col:不同登船港口分别划分，每个条目里面是Pclass船舱等级的划分
+# g_embarked_count = sns.factorplot("Pclass", col="Embarked", data=train, size=6, kind="count", palette="muted")
+# g_embarked_count = g_embarked_count.set_ylabels("Count")
+# plt.show()
 
 # dataset['AS'] = dataset['Age'].isnull().map(lambda s: 1 if s == False else 0)
 # # print(dataset['AS'])
@@ -194,7 +196,7 @@ g = sns.factorplot(y="Age", x="SibSp", data=dataset, kind="box")
 plt.show()
 
 # 将性别转换为0或者1，male：0；female：1
-dataset["Sex"] = dataset["Sex"].map({"male":0, "female":1})
+dataset["Sex"] = dataset["Sex"].map({"male": 0, "female": 1})
 g = sns.heatmap(dataset[["Age", "Sex", "SibSp", "Parch", "Pclass"]].corr(), cmap="BrBG", annot=True)
 plt.show()
 
@@ -217,7 +219,7 @@ dataset = dataset.where(pd.notna(dataset), dataset.mean(), axis='columns')
 # 重新绘Survived和Age的关系图，制箱式和琴式图
 g = sns.factorplot(x="Survived", y="Age", data=train, kind="box")
 plt.show()
-g = sns.factorplot(x="Survived", y="Age", data=train, kind="violin" )
+g = sns.factorplot(x="Survived", y="Age", data=train, kind="violin")
 plt.show()
 
 # ————————————————5 Feature engineering: 特征工程————————————————
@@ -284,7 +286,7 @@ plt.show()
 # print(dataset.head())
 # 原始数据中的添加准备好的相关数据
 dataset = pd.get_dummies(dataset, columns=["Title"])
-dataset = pd.get_dummies(dataset, columns=["Embarked"], prefix="Em")
+# dataset = pd.get_dummies(dataset, columns=["Embarked"], prefix="Em")
 # print(dataset.head())
 
 # 5.3 Cabin
@@ -320,6 +322,7 @@ for i in list(dataset.Ticket):
 
 dataset["Ticket"] = Ticket
 
+
 # print(dataset["Ticket"].head())
 
 # 相应数据添加进待训练数据集
@@ -331,7 +334,7 @@ dataset["Pclass"] = dataset["Pclass"].astype("category")
 dataset = pd.get_dummies(dataset, columns=["Pclass"], prefix="Pc")
 dataset.drop(labels=["PassengerId"], axis=1, inplace=True)
 head5 = dataset.head(5)
-# print(head5)
+print(head5)
 
 # # 针对Fare进行处理
 # dataset['FareBand'] = pd.qcut(dataset['Fare'], 4)
@@ -603,12 +606,11 @@ print("SVMC Best score:", gsSVMC.best_score_)
 
 # votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
 #                                        ('gbc', GBC_best), ('xgb', xgb_best)], voting='soft', n_jobs=-1)
-votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
-                                       ('gbc', GBC_best), ('xgb', xgb_best)], voting='soft', n_jobs=-1)
+votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('gbc', GBC_best), ('xgb', xgb_best)],
+                           voting='soft', n_jobs=-1)
 votingC = votingC.fit(X_train, Y_train)
 
 # ——————————————6.3 Prediction——————————————
 test_Survived = pd.Series(votingC.predict(test), name="Survived")
 results = pd.concat([IDtest, test_Survived], axis=1)
 results.to_csv("ensemble_python_voting.csv", index=False)
-
