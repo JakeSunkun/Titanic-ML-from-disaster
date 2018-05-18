@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ad1b6452-e5e2-4177-993d-04d6bffc83c4" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/ensemble_python_voting.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ensemble_python_voting.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_null.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/titanic.py" beforeDir="false" afterPath="$PROJECT_DIR$/titanic.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -32,11 +31,20 @@
       <file leaf-file-name="titanic.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/titanic.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="218">
-              <caret line="388" selection-start-line="388" selection-end-line="388" />
+            <state relative-caret-position="-542">
+              <caret line="428" column="19" selection-start-line="428" selection-start-column="19" selection-end-line="428" selection-end-column="19" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sklearn.py" pinned="false" current-in-tab="false">
+        <entry file="file://D:/1_Application/anaconda/Lib/site-packages/xgboost/sklearn.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="211">
+              <caret line="342" column="57" lean-forward="true" selection-start-line="342" selection-start-column="57" selection-end-line="342" selection-end-column="57" />
             </state>
           </provider>
         </entry>
@@ -142,18 +150,19 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.5020243" side_tool="true" weight="0.245702" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.502149" side_tool="true" weight="0.43690637" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info id="Version Control" order="3" sideWeight="0.504" side_tool="true" weight="0.24928367" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="9" sideWeight="0.497851" visible="true" weight="0.30122116" />
+      <window_info anchor="bottom" id="Python Console" order="9" sideWeight="0.497851" visible="true" weight="0.40162823" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.497851" weight="0.43690637" />
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.496" weight="0.08882522" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" weight="0.3295129" />
-      <window_info anchor="right" x="-906" y="152" width="680" height="533" id="SciView" order="3" visible="true" weight="0.4355301" />
+      <window_info anchor="right" x="-906" y="152" width="680" height="533" id="SciView" order="3" visible="true" weight="0.3760745" />
       <window_info id="Structure" order="1" sideWeight="0.5026042" side_tool="true" weight="0.245702" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.37991858" />
@@ -184,13 +193,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://D:/1_Application/anaconda/Lib/site-packages/sklearn/svm/classes.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1441">
-          <caret line="515" column="29" lean-forward="true" selection-start-line="515" selection-start-column="29" selection-end-line="515" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://D:/1_Application/anaconda/Lib/site-packages/sklearn/tree/tree.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="174">
@@ -537,10 +539,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://D:/1_Application/anaconda/Lib/site-packages/xgboost/sklearn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="211">
+          <caret line="342" column="57" lean-forward="true" selection-start-line="342" selection-start-column="57" selection-end-line="342" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/titanic.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="388" selection-start-line="388" selection-end-line="388" />
+        <state relative-caret-position="-542">
+          <caret line="428" column="19" selection-start-line="428" selection-start-column="19" selection-end-line="428" selection-end-column="19" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>

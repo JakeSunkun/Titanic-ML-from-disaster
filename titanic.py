@@ -423,9 +423,9 @@ plt.show()
 
 # ————————————————————————调参：最优模型——————————————————————————————
 # 优化：加入xgboost
-gbm_best = xgb.XGBClassifier(n_estimators=2000, max_depth=4, min_child_weight=2, gamma=0.9, subsample=0.8,
-                             colsample_bytree=0.8, objective='binary:logistic', nthread=-1,
-                             scale_pos_weight=1).fit(X_train, Y_train)
+# gbm_best = xgb.XGBClassifier(n_estimators=2000, max_depth=4, min_child_weight=2, gamma=0.9, subsample=0.8,
+#                              colsample_bytree=0.8, objective='binary:logistic', nthread=-1,
+#                              scale_pos_weight=1).fit(X_train, Y_train)
 XGB = xgb.XGBClassifier()
 gbm_parap_grid = {"n_estimators": [2000],
                   "max_depth": [4],
@@ -518,47 +518,47 @@ SVMC_best = gsSVMC.best_estimator_
 # Best score
 print("SVMC Best score:", gsSVMC.best_score_)
 
-
-# _____________________定义曲线绘制函数_________________________
-def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None, n_jobs=-1, train_sizes=np.linspace(.1, 1.0, 5)):
-    plt.figure()
-    plt.title(title)
-    if ylim is not None:
-        plt.ylim(*ylim)
-    plt.xlabel("Train examplts")
-    plt.ylabel("Score")
-    train_sizes, train_scores, test_scores = learning_curve(estimator, X, y,
-                                                            cv=cv, n_jobs=n_jobs, train_sizes=train_sizes)
-    train_scores_mean = np.mean(train_scores, axis=1)
-    train_scores_std = np.std(train_scores, axis=1)
-    test_scores_mean = np.mean(test_scores, axis=1)
-    test_scores_std = np.std(test_scores, axis=1)
-    plt.grid()
-
-    plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
-                     train_scores_mean + train_scores_std, alpha=0.1, color="r")
-    plt.fill_between(train_sizes, test_scores_mean - test_scores_std,
-                     test_scores_mean + test_scores_std, alpha=0.1, color="r")
-
-    plt.plot(train_sizes, train_scores_mean, 'o-', color="r", label="Training scores")
-    plt.plot(train_sizes, test_scores_mean, 'o-', color='g', label="Cross-validation score")
-
-    plt.legend(loc="best")
-    return plt
-g = plot_learning_curve(gsXGB.best_estimator_, "XGB mearning curves", X_train, Y_train, cv=kfold)
-g.show()
-g = plot_learning_curve(gsMLP.best_estimator_, "MLP mearning curves", X_train, Y_train, cv=kfold)
-g.show()
-g = plot_learning_curve(gsRFC.best_estimator_, "RF mearning curves", X_train, Y_train, cv=kfold)
-g.show()
-g = plot_learning_curve(gsExtC.best_estimator_, "ExtraTrees mearning curves", X_train, Y_train, cv=kfold)
-g.show()
-g = plot_learning_curve(gsSVMC.best_estimator_, "SVC mearning curves", X_train, Y_train, cv=kfold)
-g.show()
-g = plot_learning_curve(gsdaDTC.best_estimator_, "AdaBoost mearning curves", X_train, Y_train, cv=kfold)
-g.show()
-g = plot_learning_curve(gsGBC.best_estimator_, "GradientBoosting mearning curves", X_train, Y_train, cv=kfold)
-g.show()
+#
+# # _____________________定义曲线绘制函数_________________________
+# def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None, n_jobs=-1, train_sizes=np.linspace(.1, 1.0, 5)):
+#     plt.figure()
+#     plt.title(title)
+#     if ylim is not None:
+#         plt.ylim(*ylim)
+#     plt.xlabel("Train examplts")
+#     plt.ylabel("Score")
+#     train_sizes, train_scores, test_scores = learning_curve(estimator, X, y,
+#                                                             cv=cv, n_jobs=n_jobs, train_sizes=train_sizes)
+#     train_scores_mean = np.mean(train_scores, axis=1)
+#     train_scores_std = np.std(train_scores, axis=1)
+#     test_scores_mean = np.mean(test_scores, axis=1)
+#     test_scores_std = np.std(test_scores, axis=1)
+#     plt.grid()
+#
+#     plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
+#                      train_scores_mean + train_scores_std, alpha=0.1, color="r")
+#     plt.fill_between(train_sizes, test_scores_mean - test_scores_std,
+#                      test_scores_mean + test_scores_std, alpha=0.1, color="r")
+#
+#     plt.plot(train_sizes, train_scores_mean, 'o-', color="r", label="Training scores")
+#     plt.plot(train_sizes, test_scores_mean, 'o-', color='g', label="Cross-validation score")
+#
+#     plt.legend(loc="best")
+#     return plt
+# g = plot_learning_curve(gsXGB.best_estimator_, "XGB mearning curves", X_train, Y_train, cv=kfold)
+# g.show()
+# g = plot_learning_curve(gsMLP.best_estimator_, "MLP mearning curves", X_train, Y_train, cv=kfold)
+# g.show()
+# g = plot_learning_curve(gsRFC.best_estimator_, "RF mearning curves", X_train, Y_train, cv=kfold)
+# g.show()
+# g = plot_learning_curve(gsExtC.best_estimator_, "ExtraTrees mearning curves", X_train, Y_train, cv=kfold)
+# g.show()
+# g = plot_learning_curve(gsSVMC.best_estimator_, "SVC mearning curves", X_train, Y_train, cv=kfold)
+# g.show()
+# g = plot_learning_curve(gsdaDTC.best_estimator_, "AdaBoost mearning curves", X_train, Y_train, cv=kfold)
+# g.show()
+# g = plot_learning_curve(gsGBC.best_estimator_, "GradientBoosting mearning curves", X_train, Y_train, cv=kfold)
+# g.show()
 
 # nrows = ncols = 2
 # fig, axes = plt.subplots(nrows=nrows, ncols=ncols, sharex="all")
