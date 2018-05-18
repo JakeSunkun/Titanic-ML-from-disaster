@@ -77,6 +77,7 @@ dataset = dataset.fillna(np.nan)
 
 # 检测Null值,并计数
 info_null_sum = dataset.isnull().sum()
+print(info_null_sum)
 
 # ————————Info——————————
 # info_a = train.info()          # 显示train的概要信息
@@ -91,19 +92,15 @@ plt.figure()
 g_all = sns.heatmap(train[["Survived", "SibSp", "Parch", "Age", "Fare"]].corr(),
                     fmt=".2f", cmap="coolwarm")
 g_all = g_all.set_title("Graph3.1 Correlation matrix between numerical values ")
-# g_heatmap.show()
 plt.show()
 
 # 探究SibSp特征和survived之间的关系
-# plt.figure()
 g_sibsp = sns.factorplot(x="SibSp", y="Survived", data=train, kind="bar", size=6, palette="muted")
-# g_factorplot.despine(letf=True)
 g_sibsp = g_sibsp.set_ylabels("survival probability")
 plt.show()
 
 # Parch和survived之间的关系
 g_parch = sns.factorplot(x="Parch", y="Survived", data=train, kind="bar", size=6, palette="muted")
-# g_parch.despine(letf=True)
 g_parch = g_parch.set_ylabels("survival probabitlity")
 plt.show()
 
@@ -174,6 +171,17 @@ g_embarked_count = sns.factorplot("Pclass", col="Embarked", data=train, size=6, 
 g_embarked_count = g_embarked_count.set_ylabels("Count")
 plt.show()
 
+# dataset['AS'] = dataset['Age'].isnull().map(lambda s: 1 if s == False else 0)
+# # print(dataset['AS'])
+# dataset['CS'] = dataset['Cabin'].isnull().map(lambda s: 1 if s == False else 0)
+#
+# g_cabin_sur = sns.factorplot(x="CS", y="Survived", data=dataset, size=6, kind="bar", palette="muted")
+# g_cabin_sur = g_cabin_sur.set_ylabels("surveved probability")
+# plt.show()
+#
+# dataset['AA'] = dataset['Age'].isnull().map(lambda s: 1 if s == False else 0) + dataset['Cabin'].isnull().map(lambda s: 1 if s == False else 0)
+# # print(dataset['AA'])
+
 # ————————————————4 Filling missing Valuest:填补空缺值————————————————
 # Age：年龄和各个特征之间的数值分析
 g = sns.factorplot(y="Age", x="Sex", data=dataset, kind="box")
@@ -230,7 +238,7 @@ plt.show()
 # 统计改进
 dataset["Title"] = dataset["Title"].replace(['Lady', 'the Countess','Countess','Capt', 'Col','Don',
                                              'Dr', 'Major', 'Rev', 'Sir', 'Jonkheer', 'Dona'], 'Rare')
-dataset["Title"] = dataset["Title"].map({"Master":0, "Miss":1, "Ms" : 1 , "Mme":1, "Mlle":1, "Mrs":1, "Mr":2, "Rare":3})
+dataset["Title"] = dataset["Title"].map({"Master": 0, "Miss": 1, "Ms" : 1 , "Mme": 1, "Mlle": 1, "Mrs": 1, "Mr": 2, "Rare": 3})
 dataset["Title"] = dataset["Title"].astype(int)
 
 g = sns.countplot(dataset["Title"])
@@ -244,7 +252,7 @@ g = g.set_ylabels("sruvival probability")
 plt.show()
 
 # 去掉无关紧要的Name
-dataset.drop(labels = ["Name"], axis = 1, inplace = True)
+dataset.drop(labels=["Name"], axis=1, inplace=True)
 
 # 5.2 Family Size
 # 新建family总数
