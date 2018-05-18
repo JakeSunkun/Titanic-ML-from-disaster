@@ -427,10 +427,10 @@ plt.show()
 #                              colsample_bytree=0.8, objective='binary:logistic', nthread=-1,
 #                              scale_pos_weight=1).fit(X_train, Y_train)
 XGB = xgb.XGBClassifier()
-gbm_parap_grid = {"n_estimators": [2000],
+gbm_parap_grid = {"n_estimators": [1500, 2000, 2500],
                   "max_depth": [4],
-                  "min_child_weight": [2],
-                  "gamma": [0.9],
+                  "min_child_weight": [1, 2, 3],
+                  "gamma": [0.8, 0.9, 1.0],
                   "subsample": [0.8],
                   "colsample_bytree": [0.8],
                   "objective": ['binary:logistic'],
@@ -443,8 +443,10 @@ print("XGB Best score:", gsXGB.best_score_)
 
 # 优化：添加MLP
 # 使用GridCV的MLp
-MLP = MLPClassifier()
-mlp_param_grid = {}
+MLP = MLPClassifier(hidden_layer_sizes=(50,), max_iter=1000, solver='sgd', tol=1e-4,
+                    verbose=10, random_state=2)
+mlp_param_grid = {"learning_rate_init": [0.0001, 0.001, 0.01, 0.1, 0.2, 0.3, 1.5],
+                  "alpha": [1e-3, 1e-4, 1e-5]}
 gsMLP = GridSearchCV(MLP, param_grid=mlp_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
 gsMLP.fit(X_train, Y_train)
 mlp_best = gsMLP.best_estimator_
