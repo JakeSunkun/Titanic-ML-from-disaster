@@ -200,20 +200,40 @@ g = sns.heatmap(dataset[["Age", "Sex", "SibSp", "Parch", "Pclass"]].corr(), cmap
 plt.show()
 
 # 填充缺失的年龄信息
-# NaN age的行的列表
-index_NaN_age = list(dataset["Age"][dataset["Age"].isnull()].index)
+# NaN age的行的列表,并对Age按照分布进行填充
+# index_NaN_age = list(dataset["Age"][dataset["Age"].isnull()].index)
+#
+# for i in index_NaN_age:
+#     age_med = dataset["Age"].median()
+#     age_pred = dataset["Age"][((dataset["SibSp"] == dataset.iloc[i]["SibSp"])
+#                                & (dataset["Parch"] == dataset.iloc[i]["Parch"])
+#                                & (dataset["Pclass"] == dataset.iloc[i]["Pclass"]))].median()
+#     if not np.isnan(age_pred):
+#         dataset["Age"].iloc[i] = age_pred
+#     else:
+#         dataset['Age'].iloc[i] = age_med
 
-for i in index_NaN_age:
-    age_med = dataset["Age"].median()
-    age_pred = dataset["Age"][((dataset["SibSp"] == dataset.iloc[i]["SibSp"])
-                               & (dataset["Parch"] == dataset.iloc[i]["Parch"])
-                               & (dataset["Pclass"] == dataset.iloc[i]["Pclass"]))].median()
-    if not np.isnan(age_pred):
-        dataset["Age"].iloc[i] = age_pred
-    else:
-        dataset['Age'].iloc[i] = age_med
-
+# 设置Age的类别表
+# dataset['Age_level'] = pd.qcut(dataset['Age'], 5)
+# g = sns.factorplot(x="Age_level", y="Survived", data=dataset, size=6, kind="bar")
+# plt.show()
 dataset = dataset.where(pd.notna(dataset), dataset.mean(), axis='columns')
+
+Age_level = []
+for i in dataset['Age']:
+    if i <= 20.0:
+        Age_level.append(1)
+    elif 20.0<i<=25.0:
+        Age_level.append(2)
+    elif 25.0<i<=30.0:
+        Age_level.append(3)
+    elif 30.0<i<=39.0:
+        Age_level.append(4)
+    else:
+        Age_level.append(5)
+dataset['Age_level'] = Age_level
+
+# 填充剩余少数内容
 
 # 重新绘Survived和Age的关系图，制箱式和琴式图
 g = sns.factorplot(x="Survived", y="Age", data=train, kind="box")
@@ -356,6 +376,7 @@ dataset['Fare_level'] = Fare_level
 
 dataset.drop(labels=["PassengerId"], axis=1, inplace=True)
 # dataset.drop(labels=["Fare"], axis=1, inplace=True)
+dataset.drop(labels=["Age"], axis=1, inplace=True)
 dataset.drop(labels=["Cabin"], axis=1, inplace=True)
 dataset.drop(labels=["Parch"], axis=1, inplace=True)
 dataset.drop(labels=["SibSp"], axis=1, inplace=True)
