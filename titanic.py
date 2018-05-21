@@ -336,24 +336,20 @@ dataset.drop(labels=["PassengerId"], axis=1, inplace=True)
 head5 = dataset.head(5)
 print(head5)
 
-# # 针对Fare进行处理
-# dataset['FareBand'] = pd.qcut(dataset['Fare'], 4)
-# g = sns.factorplot(x="FareBand", y="Survived", data=dataset, kind="bar")
+# 针对Fare进行处理
+# dataset['FareBand'] = pd.qcut(dataset['Fare'], 6)
+# g = sns.factorplot(x="FareBand", y="Survived", data=dataset, size=6, kind="bar")
 # g = g.set_ylabels("Survived Probability")
 # plt.show()
 
-# g = sns.factorplot(x="Fare4", y="Survived", data=dataset, kind="bar")
-# g = g.set_ylabels("Survived Probability")
-# plt.show()
-# g = sns.factorplot(x="Fare3", y="Survived", data=dataset, kind="bar")
-# g = g.set_ylabels("Survived Probability")
-# plt.show()
-# g = sns.factorplot(x="Fare2", y="Survived", data=dataset, kind="bar")
-# g = g.set_ylabels("Survived Probability")
-# plt.show()
-# g = sns.factorplot(x="Fare1", y="Survived", data=dataset, kind="bar")
-# g = g.set_ylabels("Survived Probability")
-# plt.show()
+# dataset['Fare6'] = dataset['Fare'].map(lambda s: 1 if s <= 7.775 else 0)
+# dataset['Fare5'] = dataset['Fare'].map(lambda s: 1 if 7.775 < s <= 8.66 else 0)
+# dataset['Fare4'] = dataset['Fare'].map(lambda s: 1 if 8.66 < s <= 14.454 else 0)
+# dataset['Fare3'] = dataset['Fare'].map(lambda s: 1 if 14.454 < s <= 26.0 else 0)
+# dataset['Fare2'] = dataset['Fare'].map(lambda s: 1 if 26.0 < s <= 52.0 else 0)
+# dataset['Fare1'] = dataset['Fare'].map(lambda s: 1 if 52.0 > s else 0)
+
+
 # Fare_level = []
 # for i in dataset['Fare']:
 #     if i <= 7.91:
@@ -447,7 +443,7 @@ print("XGB Best score:", gsXGB.best_score_)
 # 优化：添加MLP
 # 使用GridCV的MLp
 MLP = MLPClassifier(hidden_layer_sizes=(50,), max_iter=1000, solver='sgd', tol=1e-4,
-                    verbose=10, random_state=2)
+                    verbose=1, random_state=2)
 mlp_param_grid = {"learning_rate_init": [0.0001, 0.001, 0.01, 0.1, 0.2, 0.3, 1.5],
                   "alpha": [1e-3, 1e-4, 1e-5]}
 gsMLP = GridSearchCV(MLP, param_grid=mlp_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
@@ -604,10 +600,8 @@ print("SVMC Best score:", gsSVMC.best_score_)
 
 # gbm_best = gbm.best_estimator_
 
-# votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
-#                                        ('gbc', GBC_best), ('xgb', xgb_best)], voting='soft', n_jobs=-1)
-votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('gbc', GBC_best), ('xgb', xgb_best)],
-                           voting='soft', n_jobs=-1)
+votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
+                                       ('gbc', GBC_best), ('xgb', xgb_best)], voting='soft', n_jobs=-1)
 votingC = votingC.fit(X_train, Y_train)
 
 # ——————————————6.3 Prediction——————————————
