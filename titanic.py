@@ -306,24 +306,23 @@ dataset = pd.get_dummies(dataset, columns=["Title"])
 #
 # # 将Cabin中的数据加入dataset中
 # dataset = pd.get_dummies(dataset, columns=["Cabin"],prefix="Cabin")
-dataset.drop(labels=["Cabin"], axis=1, inplace=True)
 
 # 5.4 Ticket
 # print(dataset["Ticket"].head())
 
-# 提取Ticket中的prefix并替换列中数据
-Ticket = []
-for i in list(dataset.Ticket):
-    if not i.isdigit():
-        Ticket.append(i.replace(".", "").replace("/", "").strip().split(' ')[0])
-    else:
-        Ticket.append("X")
-
-dataset["Ticket"] = Ticket
-
-# 相应数据添加进待训练数据集
-dataset = pd.get_dummies(dataset, columns=["Ticket"], prefix="T")
-# dataset.drop(labels = ["Ticket"], axis = 1, inplace = True)
+# # 提取Ticket中的prefix并替换列中数据
+# Ticket = []
+# for i in list(dataset.Ticket):
+#     if not i.isdigit():
+#         Ticket.append(i.replace(".", "").replace("/", "").strip().split(' ')[0])
+#     else:
+#         Ticket.append("X")
+#
+# dataset["Ticket"] = Ticket
+#
+# # 相应数据添加进待训练数据集
+# dataset = pd.get_dummies(dataset, columns=["Ticket"], prefix="T")
+dataset.drop(labels = ["Ticket"], axis = 1, inplace = True)
 
 # 为Pclass创建catgorical values
 dataset["Pclass"] = dataset["Pclass"].astype("category")
@@ -357,6 +356,7 @@ dataset['Fare_level'] = Fare_level
 
 dataset.drop(labels=["PassengerId"], axis=1, inplace=True)
 # dataset.drop(labels=["Fare"], axis=1, inplace=True)
+dataset.drop(labels=["Cabin"], axis=1, inplace=True)
 dataset.drop(labels=["Parch"], axis=1, inplace=True)
 dataset.drop(labels=["SibSp"], axis=1, inplace=True)
 

@@ -32,8 +32,8 @@
       <file leaf-file-name="titanic.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/titanic.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="100">
-              <caret line="329" column="66" lean-forward="true" selection-start-line="329" selection-start-column="66" selection-end-line="329" selection-end-column="66" />
+            <state relative-caret-position="66">
+              <caret line="312" selection-start-line="312" selection-start-column="2" selection-end-line="323" selection-end-column="67" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -166,13 +166,13 @@
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.502149" side_tool="true" weight="0.43690637" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info id="Version Control" order="3" sideWeight="0.504" side_tool="true" weight="0.24928367" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="9" sideWeight="0.497851" visible="true" weight="0.42605156" />
+      <window_info anchor="bottom" id="Python Console" order="9" sideWeight="0.497851" visible="true" weight="0.41791046" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.497851" weight="0.43690637" />
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.496" weight="0.08882522" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" weight="0.3295129" />
-      <window_info anchor="right" x="-906" y="152" width="680" height="533" id="SciView" order="3" weight="0.41117477" />
+      <window_info active="true" anchor="right" x="-906" y="152" width="680" height="533" id="SciView" order="3" visible="true" weight="0.4226361" />
       <window_info id="Structure" order="1" sideWeight="0.5026042" side_tool="true" weight="0.245702" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.37991858" />
@@ -549,8 +549,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/titanic.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="329" column="66" lean-forward="true" selection-start-line="329" selection-start-column="66" selection-end-line="329" selection-end-column="66" />
+        <state relative-caret-position="66">
+          <caret line="312" selection-start-line="312" selection-start-column="2" selection-end-line="323" selection-end-column="67" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
