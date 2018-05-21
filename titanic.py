@@ -153,8 +153,7 @@ g_pclass = g_pclass.set_ylabels("survival probability")
 plt.show()
 
 # 不同乘客舱中性别得生存比例
-g_pclass_sex = sns.factorplot(x="Pclass", y="Survived", hue="Sex", data=train,
-                   size=6, kind="bar", palette="muted")
+g_pclass_sex = sns.factorplot(x="Pclass", y="Survived", hue="Sex", data=train, size=6, kind="bar", palette="muted")
 g_pclass_sex = g_pclass_sex.set_ylabels("survival probability")
 plt.show()
 
@@ -238,7 +237,7 @@ g = plt.setp(g.get_xticklabels(), rotation=45)
 plt.show()
 
 # 统计改进
-dataset["Title"] = dataset["Title"].replace(['Lady', 'the Countess','Countess','Capt', 'Col','Don',
+dataset["Title"] = dataset["Title"].replace(['Lady', 'the Countess', 'Countess','Capt', 'Col','Don',
                                              'Dr', 'Major', 'Rev', 'Sir', 'Jonkheer', 'Dona'], 'Rare')
 dataset["Title"] = dataset["Title"].map({"Master": 0, "Miss": 1, "Ms" : 1 , "Mme": 1, "Mlle": 1, "Mrs": 1, "Mr": 2, "Rare": 3})
 dataset["Title"] = dataset["Title"].astype(int)
@@ -344,20 +343,20 @@ dataset = pd.get_dummies(dataset, columns=["Pclass"], prefix="Pc")
 # dataset['Fare1'] = dataset['Fare'].map(lambda s: 1 if 52.0 > s else 0)
 
 
-Fare_level = []
-for i in dataset['Fare']:
-    if i <= 7.91:
-        Fare_level.append(1)
-    elif 7.91<i<=14.454:
-        Fare_level.append(2)
-    elif 14.454<i<=31:
-        Fare_level.append(3)
-    else:
-        Fare_level.append(4)
-dataset['Fare_level'] = Fare_level
+# Fare_level = []
+# for i in dataset['Fare']:
+#     if i <= 7.91:
+#         Fare_level.append(1)
+#     elif 7.91<i<=14.454:
+#         Fare_level.append(2)
+#     elif 14.454<i<=31:
+#         Fare_level.append(3)
+#     else:
+#         Fare_level.append(4)
+# dataset['Fare_level'] = Fare_level
 
 dataset.drop(labels=["PassengerId"], axis=1, inplace=True)
-dataset.drop(labels=["Fare"], axis=1, inplace=True)
+# dataset.drop(labels=["Fare"], axis=1, inplace=True)
 dataset.drop(labels=["Parch"], axis=1, inplace=True)
 dataset.drop(labels=["SibSp"], axis=1, inplace=True)
 
