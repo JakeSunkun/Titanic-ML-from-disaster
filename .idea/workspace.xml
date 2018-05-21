@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ad1b6452-e5e2-4177-993d-04d6bffc83c4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ensemble_python_voting.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ensemble_python_voting.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/titanic.py" beforeDir="false" afterPath="$PROJECT_DIR$/titanic.py" afterDir="false" />
     </list>
@@ -32,8 +31,8 @@
       <file leaf-file-name="titanic.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/titanic.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3973">
-              <caret line="336" column="12" selection-start-line="336" selection-start-column="12" selection-end-line="336" selection-end-column="12" />
+            <state relative-caret-position="223">
+              <caret line="360" column="2" lean-forward="true" selection-start-line="360" selection-start-column="2" selection-end-line="361" selection-end-column="52" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -89,7 +88,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="69" />
     <option name="y" value="6" />
     <option name="width" value="1307" />
@@ -160,18 +159,19 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.5020243" side_tool="true" weight="0.245702" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.502149" side_tool="true" weight="0.43690637" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info id="Version Control" order="3" sideWeight="0.504" side_tool="true" weight="0.24928367" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="9" sideWeight="0.497851" visible="true" weight="0.7327001" />
+      <window_info anchor="bottom" id="Python Console" order="9" sideWeight="0.497851" visible="true" weight="0.48032564" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.497851" weight="0.43690637" />
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.496" weight="0.08882522" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" weight="0.3295129" />
-      <window_info anchor="right" x="-906" y="152" width="680" height="533" id="SciView" order="3" weight="0.40830946" />
+      <window_info active="true" anchor="right" x="-906" y="152" width="680" height="533" id="SciView" order="3" visible="true" weight="0.36461318" />
       <window_info id="Structure" order="1" sideWeight="0.5026042" side_tool="true" weight="0.245702" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.37991858" />
@@ -548,8 +548,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/titanic.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3973">
-          <caret line="336" column="12" selection-start-line="336" selection-start-column="12" selection-end-line="336" selection-end-column="12" />
+        <state relative-caret-position="223">
+          <caret line="360" column="2" lean-forward="true" selection-start-line="360" selection-start-column="2" selection-end-line="361" selection-end-column="52" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>

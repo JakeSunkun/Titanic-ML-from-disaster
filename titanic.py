@@ -322,9 +322,6 @@ for i in list(dataset.Ticket):
 
 dataset["Ticket"] = Ticket
 
-
-# print(dataset["Ticket"].head())
-
 # 相应数据添加进待训练数据集
 dataset = pd.get_dummies(dataset, columns=["Ticket"], prefix="T")
 # dataset.drop(labels = ["Ticket"], axis = 1, inplace = True)
@@ -332,9 +329,6 @@ dataset = pd.get_dummies(dataset, columns=["Ticket"], prefix="T")
 # 为Pclass创建catgorical values
 dataset["Pclass"] = dataset["Pclass"].astype("category")
 dataset = pd.get_dummies(dataset, columns=["Pclass"], prefix="Pc")
-dataset.drop(labels=["PassengerId"], axis=1, inplace=True)
-head5 = dataset.head(5)
-print(head5)
 
 # 针对Fare进行处理
 # dataset['FareBand'] = pd.qcut(dataset['Fare'], 6)
@@ -350,17 +344,25 @@ print(head5)
 # dataset['Fare1'] = dataset['Fare'].map(lambda s: 1 if 52.0 > s else 0)
 
 
-# Fare_level = []
-# for i in dataset['Fare']:
-#     if i <= 7.91:
-#         Fare_level.append(1)
-#     elif 7.91<i<=14.454:
-#         Fare_level.append(2)
-#     elif 14.454<i<=31:
-#         Fare_level.append(3)
-#     else:
-#         Fare_level.append(4)
-# dataset['Fare_level'] = Fare_level
+Fare_level = []
+for i in dataset['Fare']:
+    if i <= 7.91:
+        Fare_level.append(1)
+    elif 7.91<i<=14.454:
+        Fare_level.append(2)
+    elif 14.454<i<=31:
+        Fare_level.append(3)
+    else:
+        Fare_level.append(4)
+dataset['Fare_level'] = Fare_level
+
+dataset.drop(labels=["PassengerId"], axis=1, inplace=True)
+dataset.drop(labels=["Fare"], axis=1, inplace=True)
+dataset.drop(labels=["Parch"], axis=1, inplace=True)
+dataset.drop(labels=["SibSp"], axis=1, inplace=True)
+
+head5 = dataset.head(5)
+print(head5)
 
 
 # ————————————————6 modeling：建模————————————————
@@ -442,14 +444,14 @@ print("XGB Best score:", gsXGB.best_score_)
 
 # 优化：添加MLP
 # 使用GridCV的MLp
-MLP = MLPClassifier(hidden_layer_sizes=(50,), max_iter=1000, solver='sgd', tol=1e-4,
-                    verbose=1, random_state=2)
-mlp_param_grid = {"learning_rate_init": [0.0001, 0.001, 0.01, 0.1, 0.2, 0.3, 1.5],
-                  "alpha": [1e-3, 1e-4, 1e-5]}
-gsMLP = GridSearchCV(MLP, param_grid=mlp_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
-gsMLP.fit(X_train, Y_train)
-mlp_best = gsMLP.best_estimator_
-print("MLP Best score:", gsMLP.best_score_)
+# MLP = MLPClassifier(hidden_layer_sizes=(50,), max_iter=1000, solver='sgd', tol=1e-4,
+#                     verbose=1, random_state=2)
+# mlp_param_grid = {"learning_rate_init": [0.0001, 0.001, 0.01, 0.1, 0.2, 0.3, 1.5],
+#                   "alpha": [1e-3, 1e-4, 1e-5]}
+# gsMLP = GridSearchCV(MLP, param_grid=mlp_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
+# gsMLP.fit(X_train, Y_train)
+# mlp_best = gsMLP.best_estimator_
+# print("MLP Best score:", gsMLP.best_score_)
 #
 # gsMLP = MLPClassifier(hidden_layer_sizes=(50,), max_iter=1000, alpha=1e-4,
 #                     solver='sgd', verbose=10, tol=1e-4, random_state=7,
