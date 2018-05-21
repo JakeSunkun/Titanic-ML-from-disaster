@@ -31,29 +31,11 @@
       <file leaf-file-name="titanic.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/titanic.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2393">
-              <caret line="359" column="51" selection-start-line="359" selection-start-column="51" selection-end-line="359" selection-end-column="51" />
+            <state relative-caret-position="2929">
+              <caret line="403" column="27" selection-start-line="403" selection-start-column="22" selection-end-line="403" selection-end-column="27" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="categorical.py" pinned="false" current-in-tab="false">
-        <entry file="file://D:/1_Application/anaconda/Lib/site-packages/seaborn/categorical.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="58157">
-              <caret line="3441" column="4" selection-start-line="3441" selection-start-column="4" selection-end-line="3441" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sklearn.py" pinned="false" current-in-tab="false">
-        <entry file="file://D:/1_Application/anaconda/Lib/site-packages/xgboost/sklearn.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5661">
-              <caret line="342" column="57" selection-start-line="342" selection-start-column="57" selection-end-line="342" selection-end-column="57" />
             </state>
           </provider>
         </entry>
@@ -165,13 +147,13 @@
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.502149" side_tool="true" weight="0.43690637" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info id="Version Control" order="3" sideWeight="0.504" side_tool="true" weight="0.24928367" />
-      <window_info anchor="bottom" id="Python Console" order="12" sideWeight="0.497851" visible="true" weight="0.38398916" />
+      <window_info anchor="bottom" id="Python Console" order="12" sideWeight="0.497851" visible="true" weight="0.40162823" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.497851" weight="0.43690637" />
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.496" weight="0.08882522" />
       <window_info anchor="bottom" id="Docker" order="10" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" weight="0.3295129" />
-      <window_info active="true" anchor="right" x="-906" y="152" width="680" height="533" id="SciView" order="3" visible="true" weight="0.2922636" />
+      <window_info active="true" anchor="right" x="-906" y="152" width="680" height="533" id="SciView" order="3" visible="true" weight="0.43266475" />
       <window_info id="Structure" order="1" sideWeight="0.5026042" side_tool="true" weight="0.245702" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.37991858" />
@@ -202,13 +184,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://D:/1_Application/anaconda/Lib/site-packages/sklearn/tree/tree.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="579" column="43" selection-start-line="579" selection-start-column="43" selection-end-line="579" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://D:/1_Application/anaconda/Lib/site-packages/sklearn/metrics/scorer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-659">
@@ -539,17 +514,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://D:/1_Application/anaconda/Lib/site-packages/sklearn/cross_validation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="40" selection-start-line="40" selection-end-line="40" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://D:/1_Application/anaconda/Lib/site-packages/seaborn/categorical.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="58157">
+        <state relative-caret-position="17">
           <caret line="3441" column="4" selection-start-line="3441" selection-start-column="4" selection-end-line="3441" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/titanic.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2393">
-          <caret line="359" column="51" selection-start-line="359" selection-start-column="51" selection-end-line="359" selection-end-column="51" />
+        <state relative-caret-position="2929">
+          <caret line="403" column="27" selection-start-line="403" selection-start-column="22" selection-end-line="403" selection-end-column="27" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>

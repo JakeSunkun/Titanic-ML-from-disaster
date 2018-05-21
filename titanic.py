@@ -349,7 +349,7 @@ dataset["Pclass"] = dataset["Pclass"].astype("category")
 dataset = pd.get_dummies(dataset, columns=["Pclass"], prefix="Pc")
 
 # 针对Fare进行处理
-# dataset['FareBand'] = pd.qcut(dataset['Fare'], 6)
+# dataset['FareBand'] = pd.qcut(dataset['Fare'], 5)
 # g = sns.factorplot(x="FareBand", y="Survived", data=dataset, size=6, kind="bar")
 # g = g.set_ylabels("Survived Probability")
 # plt.show()
@@ -360,18 +360,42 @@ dataset = pd.get_dummies(dataset, columns=["Pclass"], prefix="Pc")
 # dataset['Fare3'] = dataset['Fare'].map(lambda s: 1 if 14.454 < s <= 26.0 else 0)
 # dataset['Fare2'] = dataset['Fare'].map(lambda s: 1 if 26.0 < s <= 52.0 else 0)
 # dataset['Fare1'] = dataset['Fare'].map(lambda s: 1 if 52.0 > s else 0)
-
-
 Fare_level = []
 for i in dataset['Fare']:
-    if i <= 7.91:
+    if i <= 7.854:
         Fare_level.append(1)
-    elif 7.91<i<=14.454:
+    elif 7.854<i<=10.5:
         Fare_level.append(2)
-    elif 14.454<i<=31:
+    elif 10.5<i<=21.06:
         Fare_level.append(3)
-    else:
+    elif 21.06<i<=39.688:
         Fare_level.append(4)
+    else:
+        Fare_level.append(5)
+
+# Fare_level = []
+# for i in dataset['Fare']:
+#     if i <= 7.91:
+#         Fare_level.append(1)
+#     elif 7.91<i<=14.454:
+#         Fare_level.append(2)
+#     elif 14.454<i<=31:
+#         Fare_level.append(3)
+#     else:
+#         Fare_level.append(4)
+# for i in dataset['Fare']:
+#     if i <= 7.775:
+#         Fare_level.append(1)
+#     elif 7.75<i<=8.66:
+#         Fare_level.append(2)
+#     elif 8.66<i<=14.454:
+#         Fare_level.append(3)
+#     elif 14.454<i<=26.0:
+#         Fare_level.append(4)
+#     elif 26.0<i<=52.0:
+#         Fare_level.append(5)
+#     else:
+#         Fare_level.append(6)
 dataset['Fare_level'] = Fare_level
 
 dataset.drop(labels=["PassengerId"], axis=1, inplace=True)
