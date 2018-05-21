@@ -343,17 +343,17 @@ dataset = pd.get_dummies(dataset, columns=["Pclass"], prefix="Pc")
 # dataset['Fare1'] = dataset['Fare'].map(lambda s: 1 if 52.0 > s else 0)
 
 
-# Fare_level = []
-# for i in dataset['Fare']:
-#     if i <= 7.91:
-#         Fare_level.append(1)
-#     elif 7.91<i<=14.454:
-#         Fare_level.append(2)
-#     elif 14.454<i<=31:
-#         Fare_level.append(3)
-#     else:
-#         Fare_level.append(4)
-# dataset['Fare_level'] = Fare_level
+Fare_level = []
+for i in dataset['Fare']:
+    if i <= 7.91:
+        Fare_level.append(1)
+    elif 7.91<i<=14.454:
+        Fare_level.append(2)
+    elif 14.454<i<=31:
+        Fare_level.append(3)
+    else:
+        Fare_level.append(4)
+dataset['Fare_level'] = Fare_level
 
 dataset.drop(labels=["PassengerId"], axis=1, inplace=True)
 # dataset.drop(labels=["Fare"], axis=1, inplace=True)
@@ -427,7 +427,7 @@ plt.show()
 #                              colsample_bytree=0.8, objective='binary:logistic', nthread=-1,
 #                              scale_pos_weight=1).fit(X_train, Y_train)
 XGB = xgb.XGBClassifier()
-gbm_parap_grid = {"n_estimators": [1500, 2000, 2500],
+gbm_parap_grid = {"n_estimators": [1500, 2000],
                   "max_depth": [4],
                   "min_child_weight": [1, 2, 3],
                   "gamma": [0.8, 0.9, 1.0],
