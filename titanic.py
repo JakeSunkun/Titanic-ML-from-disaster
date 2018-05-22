@@ -343,10 +343,10 @@ dataset["Ticket"] = Ticket
 # 相应数据添加进待训练数据集
 dataset = pd.get_dummies(dataset, columns=["Ticket"], prefix="T")
 # dataset.drop(labels = ["Ticket"], axis = 1, inplace = True)
-
+# --------------------with raw Pclass data------------------------------------
 # 为Pclass创建catgorical values
-dataset["Pclass"] = dataset["Pclass"].astype("category")
-dataset = pd.get_dummies(dataset, columns=["Pclass"], prefix="Pc")
+# dataset["Pclass"] = dataset["Pclass"].astype("category")
+# dataset = pd.get_dummies(dataset, columns=["Pclass"], prefix="Pc")
 
 # 针对Fare进行处理
 # dataset['FareBand'] = pd.qcut(dataset['Fare'], 5)
