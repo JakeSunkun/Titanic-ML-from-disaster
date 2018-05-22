@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ad1b6452-e5e2-4177-993d-04d6bffc83c4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ensemble_python_voting.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ensemble_python_voting.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gender_submission.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ensemble_python_voting.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/titanic.py" beforeDir="false" afterPath="$PROJECT_DIR$/titanic.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -33,8 +31,8 @@
       <file leaf-file-name="titanic.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/titanic.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="254">
-              <caret line="352" column="68" lean-forward="true" selection-start-line="352" selection-start-column="68" selection-end-line="352" selection-end-column="68" />
+            <state relative-caret-position="99">
+              <caret line="349" lean-forward="true" selection-start-line="349" selection-end-line="349" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -148,7 +146,7 @@
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.502149" side_tool="true" weight="0.43690637" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info id="Version Control" order="3" sideWeight="0.504" side_tool="true" weight="0.24928367" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="12" sideWeight="0.497851" visible="true" weight="0.40705562" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="12" sideWeight="0.497851" visible="true" weight="0.4843962" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.497851" weight="0.43690637" />
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.496" weight="0.08882522" />
@@ -531,8 +529,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/titanic.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="254">
-          <caret line="352" column="68" lean-forward="true" selection-start-line="352" selection-start-column="68" selection-end-line="352" selection-end-column="68" />
+        <state relative-caret-position="99">
+          <caret line="349" lean-forward="true" selection-start-line="349" selection-end-line="349" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
