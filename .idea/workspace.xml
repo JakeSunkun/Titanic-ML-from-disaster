@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ad1b6452-e5e2-4177-993d-04d6bffc83c4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ensemble_python_voting.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/titanic.py" beforeDir="false" afterPath="$PROJECT_DIR$/titanic.py" afterDir="false" />
     </list>
@@ -32,20 +31,11 @@
       <file leaf-file-name="titanic.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/titanic.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-70">
-              <caret line="301" selection-start-line="301" selection-end-line="301" />
+            <state relative-caret-position="99">
+              <caret line="349" lean-forward="true" selection-start-line="349" selection-end-line="349" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="generic.py" pinned="false" current-in-tab="false">
-        <entry file="file://D:/1_Application/anaconda/Lib/site-packages/pandas/core/generic.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-108">
-              <caret line="3249" column="8" selection-start-line="3249" selection-start-column="8" selection-end-line="3249" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -66,6 +56,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/test_github.py" />
+        <option value="$PROJECT_DIR$/test_null.py" />
         <option value="$PROJECT_DIR$/titanic.py" />
       </list>
     </option>
@@ -80,10 +71,10 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="139" />
-    <option name="y" value="23" />
+    <option name="x" value="69" />
+    <option name="y" value="6" />
     <option name="width" value="1307" />
-    <option name="height" value="867" />
+    <option name="height" value="734" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -92,7 +83,20 @@
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Titanic-ML-from-disaster" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Titanic-ML-from-disaster" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -138,17 +142,17 @@
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
     <layout>
-      <window_info id="TODO" order="3" sideWeight="0.5020243" side_tool="true" weight="0.245702" />
-      <window_info anchor="bottom" id="Event Log" order="6" sideWeight="0.502149" side_tool="true" weight="0.43690637" />
-      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info id="Version Control" order="4" sideWeight="0.504" side_tool="true" weight="0.24928367" />
-      <window_info anchor="bottom" id="Python Console" order="8" sideWeight="0.497851" visible="true" weight="0.59158754" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.5020243" side_tool="true" weight="0.245702" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.502149" side_tool="true" weight="0.43690637" />
+      <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
+      <window_info id="Version Control" order="3" sideWeight="0.504" side_tool="true" weight="0.24928367" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="12" sideWeight="0.497851" visible="true" weight="0.4843962" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.497851" weight="0.43690637" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.496" weight="0.24035609" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.496" weight="0.08882522" />
       <window_info anchor="bottom" id="Docker" order="10" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" weight="0.3295129" />
-      <window_info active="true" anchor="right" x="-423" y="66" width="1195" height="808" id="SciView" order="3" visible="true" weight="0.47636104" />
+      <window_info anchor="right" x="-906" y="152" width="680" height="533" id="SciView" order="3" visible="true" weight="0.40186247" />
       <window_info id="Structure" order="1" sideWeight="0.5026042" side_tool="true" weight="0.245702" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.37991858" />
@@ -170,7 +174,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="2" />
+      <option name="time" value="3" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Python Console Debugger">
@@ -179,41 +183,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://D:/1_Application/anaconda/Lib/site-packages/numpy/lib/function_base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="4273" selection-start-line="4273" selection-end-line="4273" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/1_Application/anaconda/Lib/site-packages/seaborn/matrix.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-367">
-          <caret line="331" column="4" selection-start-line="331" selection-start-column="4" selection-end-line="331" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/1_Application/anaconda/Lib/site-packages/dask/dataframe/rolling.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="257">
-          <caret line="262" column="8" selection-start-line="262" selection-start-column="8" selection-end-line="262" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/1_Application/anaconda/Lib/site-packages/sklearn/svm/classes.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1441">
-          <caret line="515" column="29" lean-forward="true" selection-start-line="515" selection-start-column="29" selection-end-line="515" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/1_Application/anaconda/Lib/site-packages/sklearn/tree/tree.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="579" column="43" selection-start-line="579" selection-start-column="43" selection-end-line="579" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://D:/1_Application/anaconda/Lib/site-packages/sklearn/metrics/scorer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-659">
@@ -232,9 +201,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="93">
           <caret line="407" column="36" selection-start-line="407" selection-start-column="36" selection-end-line="407" selection-end-column="36" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -242,9 +208,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="884">
           <caret line="52" column="50" selection-start-line="52" selection-start-column="50" selection-end-line="52" selection-end-column="50" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -287,9 +250,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6273">
           <caret line="369" lean-forward="true" selection-start-line="369" selection-end-line="369" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -311,9 +271,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5593">
           <caret line="329" column="28" lean-forward="true" selection-start-line="329" selection-start-column="28" selection-end-line="329" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -321,9 +278,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3536">
           <caret line="208" column="40" selection-start-line="208" selection-start-column="20" selection-end-line="208" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -331,9 +285,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3145">
           <caret line="185" lean-forward="true" selection-start-line="185" selection-end-line="185" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -341,9 +292,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1972">
           <caret line="116" lean-forward="true" selection-start-line="116" selection-end-line="116" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -351,9 +299,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
           <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -452,9 +397,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="520" lean-forward="true" selection-start-line="520" selection-end-line="520" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -462,9 +404,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5593">
           <caret line="329" column="28" lean-forward="true" selection-start-line="329" selection-start-column="28" selection-end-line="329" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -472,9 +411,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3536">
           <caret line="208" column="40" selection-start-line="208" selection-start-column="20" selection-end-line="208" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -482,9 +418,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3145">
           <caret line="185" lean-forward="true" selection-start-line="185" selection-end-line="185" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -492,9 +425,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1972">
           <caret line="116" lean-forward="true" selection-start-line="116" selection-end-line="116" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -502,9 +432,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
           <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -557,13 +484,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://D:/1_Application/anaconda/Lib/site-packages/seaborn/categorical.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-544">
-          <caret line="1459" selection-start-line="1459" selection-end-line="1459" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://D:/1_Application/anaconda/Lib/site-packages/pandas/core/generic.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-108">
@@ -571,10 +491,46 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://D:/1_Application/anaconda/Lib/importlib/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="165" selection-start-line="165" selection-end-line="165" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_null.py" />
+    <entry file="file://D:/1_Application/anaconda/Lib/site-packages/pandas/core/series.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-697">
+          <caret line="2960" column="8" selection-start-line="2960" selection-start-column="8" selection-end-line="2960" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/1_Application/anaconda/Lib/site-packages/xgboost/sklearn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5661">
+          <caret line="342" column="57" selection-start-line="342" selection-start-column="57" selection-end-line="342" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/1_Application/anaconda/Lib/site-packages/sklearn/cross_validation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="40" selection-start-line="40" selection-end-line="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/1_Application/anaconda/Lib/site-packages/seaborn/categorical.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="3441" column="4" selection-start-line="3441" selection-start-column="4" selection-end-line="3441" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/titanic.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-70">
-          <caret line="301" selection-start-line="301" selection-end-line="301" />
+        <state relative-caret-position="99">
+          <caret line="349" lean-forward="true" selection-start-line="349" selection-end-line="349" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>

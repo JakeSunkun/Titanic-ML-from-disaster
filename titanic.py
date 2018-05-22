@@ -15,6 +15,8 @@ from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV, cross_val_score, StratifiedKFold, learning_curve
 
 import xgboost as xgb
+from xgboost import XGBClassifier
+
 # ————————————————1.1 简介————————————————
 # kaggle竞赛数据：Titanic: Machine Learning from Disaster
 
@@ -75,6 +77,7 @@ dataset = dataset.fillna(np.nan)
 
 # 检测Null值,并计数
 info_null_sum = dataset.isnull().sum()
+print(info_null_sum)
 
 # ————————Info——————————
 # info_a = train.info()          # 显示train的概要信息
@@ -87,21 +90,17 @@ info_d = train.describe()      # 显示描述信息
 # 数值之间的关联度
 plt.figure()
 g_all = sns.heatmap(train[["Survived", "SibSp", "Parch", "Age", "Fare"]].corr(),
-                        annot=True, fmt=".2f", cmap="coolwarm")
+                    fmt=".2f", cmap="coolwarm")
 g_all = g_all.set_title("Graph3.1 Correlation matrix between numerical values ")
-# g_heatmap.show()
 plt.show()
 
 # 探究SibSp特征和survived之间的关系
-# plt.figure()
 g_sibsp = sns.factorplot(x="SibSp", y="Survived", data=train, kind="bar", size=6, palette="muted")
-# g_factorplot.despine(letf=True)
 g_sibsp = g_sibsp.set_ylabels("survival probability")
 plt.show()
 
 # Parch和survived之间的关系
 g_parch = sns.factorplot(x="Parch", y="Survived", data=train, kind="bar", size=6, palette="muted")
-# g_parch.despine(letf=True)
 g_parch = g_parch.set_ylabels("survival probabitlity")
 plt.show()
 
@@ -111,8 +110,8 @@ g_age = g_age.map(sns.distplot, "Age")
 plt.show()
 
 # Age曲线分布
-g = sns.kdeplot(train["Age"][(train["Survived"] == 0) & (train["Age"].notnull())], color="Red", shade = True)
-g = sns.kdeplot(train["Age"][(train["Survived"] == 1) & (train["Age"].notnull())], ax =g, color="Blue", shade= True)
+g = sns.kdeplot(train["Age"][(train["Survived"] == 0) & (train["Age"].notnull())], color="Red", shade=True)
+g = sns.kdeplot(train["Age"][(train["Survived"] == 1) & (train["Age"].notnull())], ax =g, color="Blue", shade=True)
 g.set_xlabel("Age")
 g.set_ylabel("Frequency")
 g = g.legend(["Not Survived","Survived"])
@@ -130,12 +129,12 @@ info_fare = dataset["Fare"].isnull().sum()
 
 # print(type(dataset["Fare"]))
 
-g_fare = sns.distplot(train["Fare"], color="m", label="Skewness: %.2f"%(dataset["Fare"].skew()))
+g_fare = sns.distplot(train["Fare"], color="m", label="Skewness: %.2f" % (dataset["Fare"].skew()))
 g_fare = g_fare.legend(loc="best")
 plt.show()
 # 平滑处理
-train["Fare"] = train["Fare"].map(lambda i:np.log(i) if i > 0 else 0)
-g_fare_log = sns.distplot(train["Fare"], color="m", label="Skewness: %.2f"%(dataset["Fare"].skew()))
+train["Fare"] = train["Fare"].map(lambda i: np.log(i) if i > 0 else 0)
+g_fare_log = sns.distplot(train["Fare"], color="m", label="Skewness: %.2f" % (dataset["Fare"].skew()))
 g_fare_log = g_fare_log.legend(loc="best")
 plt.show()
 
@@ -154,23 +153,35 @@ g_pclass = g_pclass.set_ylabels("survival probability")
 plt.show()
 
 # 不同乘客舱中性别得生存比例
-g_pclass_sex = sns.factorplot(x="Pclass", y="Survived", hue="Sex", data=train,
-                   size=6, kind="bar", palette="muted")
+g_pclass_sex = sns.factorplot(x="Pclass", y="Survived", hue="Sex", data=train, size=6, kind="bar", palette="muted")
 g_pclass_sex = g_pclass_sex.set_ylabels("survival probability")
 plt.show()
 
 # 登船港口数据分析
-# 填充空缺数据为登船人数最多的港口
-info_embarked = dataset["Embarked"].isnull().sum()
-dataset["Embarked"] = dataset["Embarked"].fillna("S")
+dataset.drop(labels=["Embarked"], axis=1, inplace=True)
+#
+# # 填充空缺数据为登船人数最多的港口
+# info_embarked = dataset["Embarked"].isnull().sum()
+# dataset["Embarked"] = dataset["Embarked"].fillna("S")
+#
+# g_embarked = sns.factorplot(x="Embarked", y="Survived", data=train, size=6, kind="bar", palette="muted")
+# g_embarked = g_embarked.set_ylabels("surveved probability")
+# plt.show()
+# # col:不同登船港口分别划分，每个条目里面是Pclass船舱等级的划分
+# g_embarked_count = sns.factorplot("Pclass", col="Embarked", data=train, size=6, kind="count", palette="muted")
+# g_embarked_count = g_embarked_count.set_ylabels("Count")
+# plt.show()
 
-g_embarked = sns.factorplot(x="Embarked", y="Survived", data=train, size=6, kind="bar", palette="muted")
-g_embarked = g_embarked.set_ylabels("surveved probability")
-plt.show()
-# col:不同登船港口分别划分，每个条目里面是Pclass船舱等级的划分
-g_embarked_count = sns.factorplot("Pclass", col="Embarked", data=train, size=6, kind="count", palette="muted")
-g_embarked_count = g_embarked_count.set_ylabels("Count")
-plt.show()
+# dataset['AS'] = dataset['Age'].isnull().map(lambda s: 1 if s == False else 0)
+# # print(dataset['AS'])
+# dataset['CS'] = dataset['Cabin'].isnull().map(lambda s: 1 if s == False else 0)
+#
+# g_cabin_sur = sns.factorplot(x="CS", y="Survived", data=dataset, size=6, kind="bar", palette="muted")
+# g_cabin_sur = g_cabin_sur.set_ylabels("surveved probability")
+# plt.show()
+#
+# dataset['AA'] = dataset['Age'].isnull().map(lambda s: 1 if s == False else 0) + dataset['Cabin'].isnull().map(lambda s: 1 if s == False else 0)
+# # print(dataset['AA'])
 
 # ————————————————4 Filling missing Valuest:填补空缺值————————————————
 # Age：年龄和各个特征之间的数值分析
@@ -184,30 +195,50 @@ g = sns.factorplot(y="Age", x="SibSp", data=dataset, kind="box")
 plt.show()
 
 # 将性别转换为0或者1，male：0；female：1
-dataset["Sex"] = dataset["Sex"].map({"male":0, "female":1})
+dataset["Sex"] = dataset["Sex"].map({"male": 0, "female": 1})
 g = sns.heatmap(dataset[["Age", "Sex", "SibSp", "Parch", "Pclass"]].corr(), cmap="BrBG", annot=True)
 plt.show()
 
 # 填充缺失的年龄信息
-# NaN age的行的列表
-index_NaN_age = list(dataset["Age"][dataset["Age"].isnull()].index)
+# NaN age的行的列表,并对Age按照分布进行填充
+# index_NaN_age = list(dataset["Age"][dataset["Age"].isnull()].index)
+#
+# for i in index_NaN_age:
+#     age_med = dataset["Age"].median()
+#     age_pred = dataset["Age"][((dataset["SibSp"] == dataset.iloc[i]["SibSp"])
+#                                & (dataset["Parch"] == dataset.iloc[i]["Parch"])
+#                                & (dataset["Pclass"] == dataset.iloc[i]["Pclass"]))].median()
+#     if not np.isnan(age_pred):
+#         dataset["Age"].iloc[i] = age_pred
+#     else:
+#         dataset['Age'].iloc[i] = age_med
 
-for i in index_NaN_age:
-    age_med = dataset["Age"].median()
-    age_pred = dataset["Age"][((dataset["SibSp"] == dataset.iloc[i]["SibSp"])
-                               &(dataset["Parch"] == dataset.iloc[i]["Parch"])
-                               &(dataset["Pclass"] == dataset.iloc[i]["Pclass"]))].median()
-    if not np.isnan(age_pred):
-        dataset["Age"].iloc[i] = age_pred
-    else:
-        dataset['Age'].iloc[i] = age_med
-
+# 设置Age的类别表
+# dataset['Age_level'] = pd.qcut(dataset['Age'], 5)
+# g = sns.factorplot(x="Age_level", y="Survived", data=dataset, size=6, kind="bar")
+# plt.show()
 dataset = dataset.where(pd.notna(dataset), dataset.mean(), axis='columns')
+
+Age_level = []
+for i in dataset['Age']:
+    if i <= 20.0:
+        Age_level.append(1)
+    elif 20.0<i<=25.0:
+        Age_level.append(2)
+    elif 25.0<i<=30.0:
+        Age_level.append(3)
+    elif 30.0<i<=39.0:
+        Age_level.append(4)
+    else:
+        Age_level.append(5)
+dataset['Age_level'] = Age_level
+
+# 填充剩余少数内容
 
 # 重新绘Survived和Age的关系图，制箱式和琴式图
 g = sns.factorplot(x="Survived", y="Age", data=train, kind="box")
 plt.show()
-g = sns.factorplot(x="Survived", y="Age", data=train, kind="violin" )
+g = sns.factorplot(x="Survived", y="Age", data=train, kind="violin")
 plt.show()
 
 # ————————————————5 Feature engineering: 特征工程————————————————
@@ -226,9 +257,9 @@ g = plt.setp(g.get_xticklabels(), rotation=45)
 plt.show()
 
 # 统计改进
-dataset["Title"] = dataset["Title"].replace(['Lady', 'the Countess','Countess','Capt', 'Col','Don',
+dataset["Title"] = dataset["Title"].replace(['Lady', 'the Countess', 'Countess','Capt', 'Col','Don',
                                              'Dr', 'Major', 'Rev', 'Sir', 'Jonkheer', 'Dona'], 'Rare')
-dataset["Title"] = dataset["Title"].map({"Master":0, "Miss":1, "Ms" : 1 , "Mme":1, "Mlle":1, "Mrs":1, "Mr":2, "Rare":3})
+dataset["Title"] = dataset["Title"].map({"Master": 0, "Miss": 1, "Ms" : 1 , "Mme": 1, "Mlle": 1, "Mrs": 1, "Mr": 2, "Rare": 3})
 dataset["Title"] = dataset["Title"].astype(int)
 
 g = sns.countplot(dataset["Title"])
@@ -242,7 +273,7 @@ g = g.set_ylabels("sruvival probability")
 plt.show()
 
 # 去掉无关紧要的Name
-dataset.drop(labels = ["Name"], axis = 1, inplace = True)
+dataset.drop(labels=["Name"], axis=1, inplace=True)
 
 # 5.2 Family Size
 # 新建family总数
@@ -253,10 +284,10 @@ g = g.set_ylabels("Survival Probability")
 plt.show()
 
 # 优化统计展示效果
-dataset['Single'] = dataset['Fsize'].map(lambda s: 1 if s ==1 else 0)
-dataset['SmallF'] = dataset['Fsize'].map(lambda s: 1 if s ==2 else 0)
-dataset['MedF'] = dataset['Fsize'].map(lambda s: 1 if 3<=s<=4 else 0)
-dataset['LargeF'] = dataset['Fsize'].map(lambda s: 1 if s>=5 else 0)
+dataset['Single'] = dataset['Fsize'].map(lambda s: 1 if s == 1 else 0)
+dataset['SmallF'] = dataset['Fsize'].map(lambda s: 1 if s == 2 else 0)
+dataset['MedF'] = dataset['Fsize'].map(lambda s: 1 if 3 <=s<= 4 else 0)
+dataset['LargeF'] = dataset['Fsize'].map(lambda s: 1 if s >= 5 else 0)
 
 g = sns.factorplot(x="Single", y="Survived", data=dataset, kind="bar")
 g = g.set_ylabels("Survived Probability")
@@ -274,7 +305,7 @@ plt.show()
 # print(dataset.head())
 # 原始数据中的添加准备好的相关数据
 dataset = pd.get_dummies(dataset, columns=["Title"])
-dataset = pd.get_dummies(dataset, columns=["Embarked"], prefix="Em")
+# dataset = pd.get_dummies(dataset, columns=["Embarked"], prefix="Em")
 # print(dataset.head())
 
 # 5.3 Cabin
@@ -295,10 +326,9 @@ dataset = pd.get_dummies(dataset, columns=["Embarked"], prefix="Em")
 #
 # # 将Cabin中的数据加入dataset中
 # dataset = pd.get_dummies(dataset, columns=["Cabin"],prefix="Cabin")
-dataset.drop(labels = ["Cabin"], axis = 1, inplace = True)
 
 # 5.4 Ticket
-print(dataset["Ticket"].head())
+# print(dataset["Ticket"].head())
 
 # 提取Ticket中的prefix并替换列中数据
 Ticket = []
@@ -310,18 +340,74 @@ for i in list(dataset.Ticket):
 
 dataset["Ticket"] = Ticket
 
-print(dataset["Ticket"].head())
-
 # 相应数据添加进待训练数据集
-dataset = pd.get_dummies(dataset, columns = ["Ticket"], prefix="T")
+dataset = pd.get_dummies(dataset, columns=["Ticket"], prefix="T")
 # dataset.drop(labels = ["Ticket"], axis = 1, inplace = True)
-
+# --------------------with raw Pclass data------------------------------------
 # 为Pclass创建catgorical values
-dataset["Pclass"] = dataset["Pclass"].astype("category")
-dataset = pd.get_dummies(dataset, columns=["Pclass"], prefix="Pc")
+# dataset["Pclass"] = dataset["Pclass"].astype("category")
+# dataset = pd.get_dummies(dataset, columns=["Pclass"], prefix="Pc")
+
+# 针对Fare进行处理
+# dataset['FareBand'] = pd.qcut(dataset['Fare'], 5)
+# g = sns.factorplot(x="FareBand", y="Survived", data=dataset, size=6, kind="bar")
+# g = g.set_ylabels("Survived Probability")
+# plt.show()
+
+# dataset['Fare6'] = dataset['Fare'].map(lambda s: 1 if s <= 7.775 else 0)
+# dataset['Fare5'] = dataset['Fare'].map(lambda s: 1 if 7.775 < s <= 8.66 else 0)
+# dataset['Fare4'] = dataset['Fare'].map(lambda s: 1 if 8.66 < s <= 14.454 else 0)
+# dataset['Fare3'] = dataset['Fare'].map(lambda s: 1 if 14.454 < s <= 26.0 else 0)
+# dataset['Fare2'] = dataset['Fare'].map(lambda s: 1 if 26.0 < s <= 52.0 else 0)
+# dataset['Fare1'] = dataset['Fare'].map(lambda s: 1 if 52.0 > s else 0)
+Fare_level = []
+for i in dataset['Fare']:
+    if i <= 7.854:
+        Fare_level.append(1)
+    elif 7.854<i<=10.5:
+        Fare_level.append(2)
+    elif 10.5<i<=21.06:
+        Fare_level.append(3)
+    elif 21.06<i<=39.688:
+        Fare_level.append(4)
+    else:
+        Fare_level.append(5)
+
+# Fare_level = []
+# for i in dataset['Fare']:
+#     if i <= 7.91:
+#         Fare_level.append(1)
+#     elif 7.91<i<=14.454:
+#         Fare_level.append(2)
+#     elif 14.454<i<=31:
+#         Fare_level.append(3)
+#     else:
+#         Fare_level.append(4)
+# for i in dataset['Fare']:
+#     if i <= 7.775:
+#         Fare_level.append(1)
+#     elif 7.75<i<=8.66:
+#         Fare_level.append(2)
+#     elif 8.66<i<=14.454:
+#         Fare_level.append(3)
+#     elif 14.454<i<=26.0:
+#         Fare_level.append(4)
+#     elif 26.0<i<=52.0:
+#         Fare_level.append(5)
+#     else:
+#         Fare_level.append(6)
+dataset['Fare_level'] = Fare_level
+
 dataset.drop(labels=["PassengerId"], axis=1, inplace=True)
+# dataset.drop(labels=["Fare"], axis=1, inplace=True)
+dataset.drop(labels=["Age"], axis=1, inplace=True)
+dataset.drop(labels=["Cabin"], axis=1, inplace=True)
+dataset.drop(labels=["Parch"], axis=1, inplace=True)
+dataset.drop(labels=["SibSp"], axis=1, inplace=True)
+
 head5 = dataset.head(5)
 print(head5)
+
 
 # ————————————————6 modeling：建模————————————————
 # 将dataset分为train和test
@@ -354,6 +440,7 @@ classifiers.append(MLPClassifier(random_state=random_state))
 classifiers.append(KNeighborsClassifier())
 classifiers.append(LogisticRegression(random_state=random_state))
 classifiers.append(LinearDiscriminantAnalysis())
+classifiers.append(XGBClassifier())
 
 cv_results = []
 # scoring：用户决定输出评分的格式；cv：交叉验证；n_jobs:使用的CPU核心数量
@@ -370,7 +457,7 @@ for cv_results in cv_results:
 cv_res = pd.DataFrame({"CrossValMeans": cv_means, "CrossValerrors": cv_std,
                        "Algorithm": ["SVC", "DecisionTree", "AdaBoost", "RandomForest", "ExtraTrees",
                                      "GradientBoosting", "MultipleLayerPerceptron", "KNeighboors", "LogisticRegression",
-                                     "LinearDiscriminantAnalysis"]})
+                                     "LinearDiscriminantAnalysis", "XGBClassifier"]})
 
 g = sns.barplot("CrossValMeans", "Algorithm", data=cv_res, palette="Set3",
                 orient="h", **{'xerr': cv_std})
@@ -381,23 +468,14 @@ plt.show()
 
 # ————————————————————————调参：最优模型——————————————————————————————
 # 优化：加入xgboost
-gbm_best = xgb.XGBClassifier(
-        #learning_rate = 0.02,
-     n_estimators= 2000,
-     max_depth= 4,
-     min_child_weight= 2,
-     #gamma=1,
-     gamma=0.9,
-     subsample=0.8,
-     colsample_bytree=0.8,
-     objective= 'binary:logistic',
-     nthread= -1,
-     scale_pos_weight=1).fit(X_train, Y_train)
+# gbm_best = xgb.XGBClassifier(n_estimators=2000, max_depth=4, min_child_weight=2, gamma=0.9, subsample=0.8,
+#                              colsample_bytree=0.8, objective='binary:logistic', nthread=-1,
+#                              scale_pos_weight=1).fit(X_train, Y_train)
 XGB = xgb.XGBClassifier()
-gbm_parap_grid = {"n_estimators": [2000],
+gbm_parap_grid = {"n_estimators": [1500, 2000],
                   "max_depth": [4],
-                  "min_child_weight": [2],
-                  "gamma": [0.9],
+                  "min_child_weight": [1, 2, 3],
+                  "gamma": [0.8, 0.9, 1.0],
                   "subsample": [0.8],
                   "colsample_bytree": [0.8],
                   "objective": ['binary:logistic'],
@@ -410,12 +488,14 @@ print("XGB Best score:", gsXGB.best_score_)
 
 # 优化：添加MLP
 # 使用GridCV的MLp
-MLP = MLPClassifier()
-mlp_param_grid = {}
-gsMLP = GridSearchCV(MLP, param_grid=mlp_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
-gsMLP.fit(X_train, Y_train)
-mlp_best = gsMLP.best_estimator_
-print("MLP Best score:", gsMLP.best_score_)
+# MLP = MLPClassifier(hidden_layer_sizes=(50,), max_iter=1000, solver='sgd', tol=1e-4,
+#                     verbose=1, random_state=2)
+# mlp_param_grid = {"learning_rate_init": [0.0001, 0.001, 0.01, 0.1, 0.2, 0.3, 1.5],
+#                   "alpha": [1e-3, 1e-4, 1e-5]}
+# gsMLP = GridSearchCV(MLP, param_grid=mlp_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
+# gsMLP.fit(X_train, Y_train)
+# mlp_best = gsMLP.best_estimator_
+# print("MLP Best score:", gsMLP.best_score_)
 #
 # gsMLP = MLPClassifier(hidden_layer_sizes=(50,), max_iter=1000, alpha=1e-4,
 #                     solver='sgd', verbose=10, tol=1e-4, random_state=7,
@@ -479,53 +559,53 @@ print("GradientBoostingClassifier Best score:", gsGBC.best_score_)
 # SVC classifier
 SVMC = SVC(probability=True)
 svc_param_grid = {'kernel': ['rbf'], 'gamma': [0.001, 0.01, 0.1, 1], 'C': [1, 10, 50, 100, 200, 300, 1000]}
-gsSVMC = GridSearchCV(SVMC, param_grid=svc_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose = 1)
+gsSVMC = GridSearchCV(SVMC, param_grid=svc_param_grid, cv=kfold, scoring="accuracy", n_jobs=4, verbose=1)
 gsSVMC.fit(X_train, Y_train)
 SVMC_best = gsSVMC.best_estimator_
 # Best score
 print("SVMC Best score:", gsSVMC.best_score_)
 
-
-# _____________________定义曲线绘制函数_________________________
-def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None, n_jobs=-1, train_sizes=np.linspace(.1, 1.0, 5)):
-    plt.figure()
-    plt.title(title)
-    if ylim is not None:
-        plt.ylim(*ylim)
-    plt.xlabel("Train examplts")
-    plt.ylabel("Score")
-    train_sizes, train_scores, test_scores = learning_curve(estimator, X, y,
-                                                            cv=cv, n_jobs=n_jobs, train_sizes=train_sizes)
-    train_scores_mean = np.mean(train_scores, axis=1)
-    train_scores_std = np.std(train_scores, axis=1)
-    test_scores_mean = np.mean(test_scores, axis=1)
-    test_scores_std = np.std(test_scores, axis=1)
-    plt.grid()
-
-    plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
-                     train_scores_mean + train_scores_std, alpha=0.1, color="r")
-    plt.fill_between(train_sizes, test_scores_mean - test_scores_std,
-                     test_scores_mean + test_scores_std, alpha=0.1, color="r")
-
-    plt.plot(train_sizes, train_scores_mean, 'o-', color="r", label="Training scores")
-    plt.plot(train_sizes, test_scores_mean, 'o-', color='g', label="Cross-validation score")
-
-    plt.legend(loc="best")
-    return plt
-g = plot_learning_curve(gsXGB.best_estimator_, "XGB mearning curves", X_train, Y_train, cv=kfold)
-g.show()
-g = plot_learning_curve(gsMLP.best_estimator_, "MLP mearning curves", X_train, Y_train, cv=kfold)
-g.show()
-g = plot_learning_curve(gsRFC.best_estimator_, "RF mearning curves", X_train, Y_train, cv=kfold)
-g.show()
-g = plot_learning_curve(gsExtC.best_estimator_, "ExtraTrees mearning curves", X_train, Y_train, cv=kfold)
-g.show()
-g = plot_learning_curve(gsSVMC.best_estimator_, "SVC mearning curves", X_train, Y_train, cv=kfold)
-g.show()
-g = plot_learning_curve(gsdaDTC.best_estimator_, "AdaBoost mearning curves", X_train, Y_train, cv=kfold)
-g.show()
-g = plot_learning_curve(gsGBC.best_estimator_, "GradientBoosting mearning curves", X_train, Y_train, cv=kfold)
-g.show()
+#
+# # _____________________定义曲线绘制函数_________________________
+# def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None, n_jobs=-1, train_sizes=np.linspace(.1, 1.0, 5)):
+#     plt.figure()
+#     plt.title(title)
+#     if ylim is not None:
+#         plt.ylim(*ylim)
+#     plt.xlabel("Train examplts")
+#     plt.ylabel("Score")
+#     train_sizes, train_scores, test_scores = learning_curve(estimator, X, y,
+#                                                             cv=cv, n_jobs=n_jobs, train_sizes=train_sizes)
+#     train_scores_mean = np.mean(train_scores, axis=1)
+#     train_scores_std = np.std(train_scores, axis=1)
+#     test_scores_mean = np.mean(test_scores, axis=1)
+#     test_scores_std = np.std(test_scores, axis=1)
+#     plt.grid()
+#
+#     plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
+#                      train_scores_mean + train_scores_std, alpha=0.1, color="r")
+#     plt.fill_between(train_sizes, test_scores_mean - test_scores_std,
+#                      test_scores_mean + test_scores_std, alpha=0.1, color="r")
+#
+#     plt.plot(train_sizes, train_scores_mean, 'o-', color="r", label="Training scores")
+#     plt.plot(train_sizes, test_scores_mean, 'o-', color='g', label="Cross-validation score")
+#
+#     plt.legend(loc="best")
+#     return plt
+# g = plot_learning_curve(gsXGB.best_estimator_, "XGB mearning curves", X_train, Y_train, cv=kfold)
+# g.show()
+# g = plot_learning_curve(gsMLP.best_estimator_, "MLP mearning curves", X_train, Y_train, cv=kfold)
+# g.show()
+# g = plot_learning_curve(gsRFC.best_estimator_, "RF mearning curves", X_train, Y_train, cv=kfold)
+# g.show()
+# g = plot_learning_curve(gsExtC.best_estimator_, "ExtraTrees mearning curves", X_train, Y_train, cv=kfold)
+# g.show()
+# g = plot_learning_curve(gsSVMC.best_estimator_, "SVC mearning curves", X_train, Y_train, cv=kfold)
+# g.show()
+# g = plot_learning_curve(gsdaDTC.best_estimator_, "AdaBoost mearning curves", X_train, Y_train, cv=kfold)
+# g.show()
+# g = plot_learning_curve(gsGBC.best_estimator_, "GradientBoosting mearning curves", X_train, Y_train, cv=kfold)
+# g.show()
 
 # nrows = ncols = 2
 # fig, axes = plt.subplots(nrows=nrows, ncols=ncols, sharex="all")
@@ -566,8 +646,6 @@ g.show()
 
 # gbm_best = gbm.best_estimator_
 
-# votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
-#                                        ('gbc', GBC_best), ('xgb', xgb_best)], voting='soft', n_jobs=-1)
 votingC = VotingClassifier(estimators=[('tfc', RFC_best), ('extc', ExtC_best), ('svc', SVMC_best), ('adac', ada_best),
                                        ('gbc', GBC_best), ('xgb', xgb_best)], voting='soft', n_jobs=-1)
 votingC = votingC.fit(X_train, Y_train)
@@ -576,4 +654,3 @@ votingC = votingC.fit(X_train, Y_train)
 test_Survived = pd.Series(votingC.predict(test), name="Survived")
 results = pd.concat([IDtest, test_Survived], axis=1)
 results.to_csv("ensemble_python_voting.csv", index=False)
-
